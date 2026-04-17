@@ -1,136 +1,181 @@
-# NammaYatri — Web rider
+<p align="center">
+  <img src="assets/img/readme-hero.svg" alt="NammaYatri.web — animated auto-rickshaw driving through a Bengaluru-inspired cityscape" width="100%"/>
+</p>
 
-A zero-build, static HTML/CSS/JS rider client for the NammaYatri open-mobility backend. The site ships as plain files under `docs/` and is designed to be served by GitHub Pages, with a thin Cloudflare Worker acting as the only bridge to the upstream API.
+<h1 align="center">NammaYatri · Web rider</h1>
 
-## Overview
+<p align="center">
+  <strong>The complete NammaYatri rider experience, as a zero-build static site.</strong><br/>
+  HTML / CSS / JavaScript against the real mobility API · signed in with your phone · tracked on a live map.
+</p>
 
-The client is a multi-page app (no bundler, no framework) that speaks the same `pilot/app/v2` API the official mobile apps speak. Because the production API host does not emit CORS headers, the browser cannot call it directly. A tiny Cloudflare Worker at the repo root (`cloudflare-worker.js`) acts as a hidden-upstream relay: it holds the real backend URL server-side, applies a CORS allow-list, an optional shared-secret header, and per-IP rate limiting, then forwards the request. The web client never sees the upstream URL.
+<p align="center">
+  <a href="https://vijaygupta18.github.io/nammayatri-webapp/"><img src="https://img.shields.io/badge/-Live%20site-FCC32C?style=flat-square&logoColor=0F1115&labelColor=0F1115" alt="Live site"/></a>
+  <img src="https://img.shields.io/badge/build-zero--build-0F1115?style=flat-square" alt="Zero build"/>
+  <img src="https://img.shields.io/badge/deps-0-0F1115?style=flat-square" alt="Zero dependencies"/>
+  <img src="https://img.shields.io/badge/license-MIT-0F1115?style=flat-square" alt="MIT"/>
+  <img src="https://img.shields.io/badge/theme-light%20%2F%20dark-0F1115?style=flat-square" alt="Theme aware"/>
+</p>
+
+---
+
+<p align="center">
+  <img src="assets/img/readme-flow.svg" alt="The rider journey: sign in → search → pick → confirm → track → rate, with a rickshaw sliding through every stage" width="100%"/>
+</p>
+
+---
+
+## What this is
+
+A community-built web rider for [NammaYatri](https://nammayatri.in), India's first zero-commission ride-hailing network (a project of the [Beckn](https://becknprotocol.io/) open commerce initiative). Ships as plain HTML / CSS / JS — no framework, no bundler — and speaks the same `/app/v2` API the official mobile apps speak, through a thin Cloudflare Worker that hides the upstream.
+
+- 🧭 **Full journey** — sign in, search, live estimates, booking, driver tracking, cancel, rate, history, receipt, referral, help, SOS
+- 🎨 **Brand-native** — single yellow accent (`#FCC32C`), real NammaYatri wordmark, real vehicle art
+- 🌓 **Theme-aware** — auto-detects system preference, toggle in the nav, persisted in `localStorage`
+- 🎥 **3D + motion** — Three.js hero scenes, animated SVG auto-rickshaws, scroll-linked parallax, stagger reveals, confetti on 5★, journey progress bar that slides to the current stage
+- 🔐 **Hidden upstream** — the real API URL lives only inside the Cloudflare Worker; the browser never learns it
+- 🗺️ **Real maps** — OpenStreetMap tiles via CARTO (dark/light per theme), pickup + drop markers from the NY asset set
+- ⚡ **Fast** — 70+ files, ~560 KB total, one CDN each for Leaflet / Three.js / fonts
 
 ## Deploy to GitHub Pages
 
-1. Commit the `docs/` folder to your repo on `main`.
-2. In GitHub → **Settings → Pages**, set *Source* to **Deploy from branch**, pick branch `main` and folder `/docs`, then **Save**.
-3. Wait ~60 seconds. Your site goes live at `https://<user>.github.io/<repo>/`.
+```bash
+# Fork or clone this repo, push it to your own GitHub account, then:
+# Settings → Pages → Deploy from a branch → main → / (root) → Save
+```
 
-No build step. Anything you push to `docs/` is what ships.
+Wait ~60 seconds. Your site is live at `https://<user>.github.io/<repo>/`. No build step — what you push is what ships.
 
 ## Deploy the Cloudflare Worker
 
-The worker file is at the **repo root**, not under `docs/`, because it is server code, not served content.
+The browser cannot call the NammaYatri API directly — the production host does not emit CORS headers. A tiny worker bridges that gap and hides the upstream URL.
 
-1. Go to <https://workers.cloudflare.com> and sign in.
-2. Click **Create Worker** → give it a name (e.g. `ny-web`) → **Quick edit**.
-3. Open `cloudflare-worker.js` from this repo root and paste its full contents into the editor, replacing the template.
-4. Click **Save and Deploy**.
-5. Copy the worker URL shown at the top (looks like `https://ny-web.<sub>.workers.dev`).
+1. Go to [workers.cloudflare.com](https://workers.cloudflare.com) and sign in.
+2. **Create Worker** → name it (e.g. `ny-web`) → **Quick edit**.
+3. Paste the full contents of `cloudflare-worker.js` from this repo.
+4. **Save and Deploy**.
+5. Copy the URL (`https://ny-web.<sub>.workers.dev`).
 
-Sanity check: `curl https://ny-web.<sub>.workers.dev/_health` should return `{"ok":true,"ts":...}`.
+Sanity check:
+
+```bash
+curl https://ny-web.<sub>.workers.dev/_health
+# {"ok":true,"ts":...}
+```
 
 ## Configure the client
 
-Two options.
+### Per-user (runtime, no redeploy)
 
-**Per-user (runtime):**
+1. Open `/settings.html` on your deployed site.
+2. Paste the Worker URL into **Proxy URL**, click **Save**.
+3. Optional: if you set `SHARED_SECRET` in the worker, paste the same value.
 
-1. Open `/settings.html` on your deployed Pages site.
-2. Paste the Worker URL into the **Proxy URL** field.
-3. (Optional) If you set `SHARED_SECRET` in the worker, paste the same value in **Secret**.
-4. Click **Save**, then flip **Mode** to *Live*.
+### Baked-in (ships for everyone)
 
-**Baked-in (for everyone):**
-
-Edit `docs/assets/js/config.js` and set
+Edit `assets/js/config.js`:
 
 ```js
-export const WORKER_URL = 'https://ny-web.<sub>.workers.dev';
+const WORKER_URL = 'https://ny-web.<sub>.workers.dev';
 ```
 
-then redeploy. Every visitor now hits your worker without having to configure it themselves.
+Redeploy. Every visitor now hits your worker without having to configure it.
 
-## Cloudflare Workers free-tier limits (2026)
+## Cloudflare Workers free-tier limits
 
-| Limit                    | Free plan                      | Paid plan ($5/mo)    |
-| ------------------------ | ------------------------------ | -------------------- |
-| Requests                 | 100,000 / day (UTC midnight)   | 10,000,000 / month   |
-| CPU time per request     | 10 ms (Bundled)                | 30 s                 |
-| Subrequests / invocation | 50                             | 50 (1000 on Unbound) |
-| Script size              | 1 MB                           | 10 MB                |
-| Egress bandwidth         | Fair use                       | Fair use             |
+|                          | Free plan                       | Paid plan ($5/mo)    |
+| ------------------------ | ------------------------------- | -------------------- |
+| Requests                 | 100,000 / day (UTC midnight)    | 10,000,000 / month   |
+| CPU per request          | 10 ms (Bundled)                 | 30 s                 |
+| Subrequests / invocation | 50                              | 50 (1,000 on Unbound)|
+| Script size              | 1 MB                            | 10 MB                |
 
-This relay uses roughly 1 ms of CPU per request, well inside the free budget. Each API call to the app is one subrequest, nowhere near 50.
+This relay uses roughly 1 ms of CPU per request, comfortably inside the free budget.
 
 ## Security hardening
 
 All switches live at the top of `cloudflare-worker.js`:
 
-- **`ALLOWED_ORIGINS`** — array of allowed `Origin` values. Leave empty (`[]`) to accept any origin during first-time setup, then tighten to your Pages URL:
+- **`ALLOWED_ORIGINS`** — tighten to your Pages URL after first setup:
   ```js
   const ALLOWED_ORIGINS = ['https://<you>.github.io'];
   ```
-- **`SHARED_SECRET`** — set to a random string; clients must echo it in the `x-ny-secret` header (Settings → Secret). Blocks casual drive-by use of your worker URL.
-- **`RATE_LIMIT_PER_MINUTE`** — per-IP cap (default 60). Enforced with the edge cache keyed by `sha256(ip + ":" + minute)`; no Durable Objects required. Excess requests get `429` with `retry-after: 60`.
-- **Upstream hiding** — `UPSTREAM` is only read server-side. The client and network responses never include the upstream host; `server`, `via`, `x-envoy-upstream-service-time`, `alt-svc` are stripped from relayed responses.
-- **CORS** — every response carries `vary: origin`, so caches don't cross-pollinate between allowed origins. `OPTIONS` preflight is handled before rate-limit / auth checks.
-- **Logs** — one line per request: `METHOD /path STATUS durationMs`. Query strings and bodies are never logged.
+- **`SHARED_SECRET`** — set a random string; the client echoes it in the `x-ny-secret` header. Blocks drive-by use of your worker URL.
+- **`RATE_LIMIT_PER_MINUTE`** — per-IP cap (default 60), enforced via the edge cache. No Durable Objects required.
+- **Upstream hiding** — `UPSTREAM` is read server-side only. Relayed responses strip `server`, `via`, `x-envoy-upstream-service-time`, `alt-svc`.
 
 ## Local development
 
-Serve the static client:
-
 ```bash
-python3 -m http.server --directory docs 8899
+# Static site
+python3 -m http.server 8899
 # or
-npx serve docs -p 8899
+npx serve -p 8899
+
+# Local CORS proxy (dev only)
+node proxy.js        # :9000 — forwards to the NammaYatri sandbox
 ```
 
-Then visit <http://localhost:8899>. If you want to exercise Live mode locally, run the fallback Node relay (no Cloudflare account needed):
+Open `/settings.html`, point **Proxy URL** to `http://localhost:9000`, **Save**.
+
+Override the upstream if you want a different environment:
 
 ```bash
-node docs/proxy.js   # listens on :9000, forwards to the same upstream
+UPSTREAM=https://api.c2.moving.tech/pilot/app/v2 node proxy.js
 ```
 
-Point Settings → Proxy URL at `http://localhost:9000` and flip to *Live*. This is for development only — don't expose `docs/proxy.js` to the public internet, it has no auth.
+## Screen map
 
-## Ride flow covered
-
-Splash → **login** (phone) → **otp** → **home** (map + source/drop autocomplete) → **estimates** (7 tiers, `POST /estimate/:id/select2`) → **ride** (poll `/rideBooking/v2/:id` through `NEW → TRIP_ASSIGNED → INPROGRESS → COMPLETED`, live OTP + cancel) → **rate** (`POST /feedback/rateRide`) → **receipt** (fare breakup) → **rides** (history + filters).
-
-Aux screens: **profile** (read/edit), **referral**, **help**, **sos** (safety), **share-ride** (public tracking link), **settings** (mode / proxy / secret / merchant), **404**.
+| Page | What happens |
+|------|--------------|
+| `index.html` | Cinematic landing — animated SVG hero, Three.js overlay, marquee, testimonials, trust row |
+| `login.html` | Phone number entry |
+| `otp.html` | 4-digit OTP verification |
+| `home.html` | Map + source/drop autocomplete + favourites + recents |
+| `estimates.html` | Map sidebar + 7 ride tiles with live fares + sticky confirm |
+| `ride.html` | Live tracking — status stages, driver card, ride OTP, cancel |
+| `rate.html` | 5-star rating with confetti on 4★/5★ |
+| `receipt.html` | Fare breakup + route map + rating stars |
+| `rides.html` | History with filter chips + inline cancel for active rides |
+| `profile.html` | Read + edit name, email, gender, language |
+| `referral.html` | Referral code, share link |
+| `help.html` | Ticket creation + topic chooser |
+| `sos.html` | Emergency contacts + SOS broadcast |
+| `share-ride.html` | Public read-only tracking link |
+| `settings.html` | Proxy URL, merchant id, diagnostics |
+| `404.html` | Not found |
 
 ## File map
 
 ```
-ny-react-native/
+nammayatri-webapp/
 ├── cloudflare-worker.js       Server-side relay (deploy to Cloudflare)
-└── docs/                      GitHub Pages root
-    ├── index.html             Landing (Three.js hero)
-    ├── login.html
-    ├── otp.html
-    ├── home.html              Map + autocomplete
-    ├── estimates.html         Quote tiles + select
-    ├── ride.html              Live tracking
-    ├── rate.html              Post-ride rating
-    ├── receipt.html           Fare breakup + summary
-    ├── rides.html             History
-    ├── profile.html
-    ├── referral.html
-    ├── help.html
-    ├── sos.html
-    ├── share-ride.html        Public tracking link
-    ├── settings.html          Mode / proxy / merchant
-    ├── 404.html
-    ├── proxy.js               Local Node relay (dev only, port 9000)
-    └── assets/
-        ├── css/               base · components · 3d · map
-        ├── js/                config · session · api · ui · three-hero · <screen>.js
-        └── img/               favicon.svg
+├── proxy.js                   Local Node relay (dev only, port 9000)
+├── index.html                 Landing page
+├── <15 other html pages>
+└── assets/
+    ├── css/                   base · components · 3d · premium · scenes · map
+    ├── js/                    config · session · api · ui · motion · three-hero · scenes · <screen>.js
+    └── img/
+        ├── brand/             NammaYatri wordmark + marks (from the consumer app)
+        ├── ride/              Tier-specific vehicle art
+        ├── map/               Pickup + drop markers
+        ├── hero/              Hero illustrations
+        ├── auto-animated.svg  Compact animated rickshaw (SMIL)
+        ├── readme-hero.svg    README hero banner
+        └── readme-flow.svg    README journey rail
 ```
 
 ## Credits
 
-- **API**: NammaYatri open-mobility backend (`/pilot/app/v2`), built on the Beckn protocol.
-- **Maps**: OpenStreetMap contributors, rendered with [Leaflet](https://leafletjs.com/).
-- **3D**: [three.js](https://threejs.org/) via unpkg CDN.
-- **Icons & vehicle art**: `ny.assets.juspay.in` and `assets.moving.tech`.
+- **API** — NammaYatri open mobility backend, built on the [Beckn protocol](https://becknprotocol.io/)
+- **Maps** — [OpenStreetMap](https://www.openstreetmap.org) contributors · [CARTO](https://carto.com) dark/light tiles · [Leaflet](https://leafletjs.com)
+- **3D** — [three.js](https://threejs.org)
+- **Vehicle art** — NammaYatri consumer app assets
+- **Fonts** — Space Grotesk, Inter Tight, Fraunces, JetBrains Mono via Google Fonts
 
-Community-built client, not an official NammaYatri product. In Live mode it books real rides on real vehicles — use accordingly.
+## License
+
+MIT — see [`LICENSE`](./LICENSE).
+
+> Community-built client, not an official NammaYatri product. In Live mode it books real rides on real vehicles — use accordingly. Open a PR if you spot a bug or want to add a city.
