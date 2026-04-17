@@ -1,0 +1,315 @@
+/* NammaYatri · Mobile + Responsive Final Pass
+ *
+ * Loaded LAST so every rule wins specificity over earlier layers when
+ * necessary. Breakpoint plan:
+ *   ≥ 961px   desktop (existing design untouched)
+ *   720–960   tablet / small laptop
+ *   ≤ 720px   phone
+ *   ≤ 420px   tiny phone (iPhone SE class)
+ *
+ * Goals:
+ *   · every page legible + tappable on 320px+
+ *   · touch targets ≥ 44px
+ *   · body inputs ≥ 16px (prevents iOS auto-zoom)
+ *   · no horizontal scroll, ever
+ *   · journey bar shrinks gracefully and never occludes CTAs
+ */
+
+/* ============================================================
+   Global safety — no horizontal scroll, smoother text on small dpi
+   ============================================================ */
+html, body { -webkit-text-size-adjust: 100%; overflow-x: hidden; }
+*, *::before, *::after { max-width: 100%; }
+img, svg, video { height: auto; }
+
+/* ============================================================
+   Tablet breakpoint — graceful intermediate
+   ============================================================ */
+@media (max-width: 960px) {
+  .container { width: min(1240px, 92vw); }
+  .hero {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+    padding: 48px 0 32px !important;
+    min-height: 0 !important;
+  }
+  .hero-visual { height: 380px !important; }
+  .hero-meta {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px !important;
+    padding-top: 18px;
+  }
+  .hero-meta .stat { padding-right: 12px; }
+
+  .est-layout { grid-template-columns: 1fr !important; gap: 16px !important; }
+  .est-map-wrap { position: static !important; }
+  #estimate-map { height: 40vh !important; min-height: 280px !important; }
+
+  .book-layout { grid-template-columns: 1fr !important; height: auto !important; min-height: 0 !important; }
+  .book-panel { max-height: none !important; order: 1; }
+  .book-map { order: 2; height: 44vh !important; min-height: 300px !important; }
+
+  .ride-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+  #track-map { height: 48vh !important; min-height: 320px !important; }
+
+  .rc-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+  #rc-map { height: 36vh !important; min-height: 260px !important; }
+
+  main > .container[style*="1fr 1fr"],
+  main > .container[style*=".8fr 1.2fr"],
+  main > .container[style*=".2fr 1.8fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  .section-header { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .page-index { display: none !important; }
+}
+
+/* ============================================================
+   Phone breakpoint
+   ============================================================ */
+@media (max-width: 720px) {
+  /* type + rhythm */
+  h1 { font-size: clamp(1.9rem, 8.5vw, 2.6rem) !important; line-height: 1.05 !important; letter-spacing: -0.02em !important; }
+  h2 { font-size: clamp(1.3rem, 6vw, 1.7rem) !important; line-height: 1.15 !important; }
+  h3 { font-size: 1rem !important; }
+  p  { font-size: 14.5px; line-height: 1.55; }
+
+  .page { padding: 22px 0 80px; }
+  .container { width: 92vw; }
+
+  /* nav */
+  .nav-inner { height: 54px; }
+  .logo-img { height: 26px; }
+  .nav-links { gap: 2px; }
+  .nav-link { padding: 6px 8px; font-size: 11.5px; }
+  .nav-link:not(.active) { display: none; }         /* show only current page */
+  .nav-link[href="index.html"] { display: inline-flex; }
+  .theme-toggle { width: 34px; height: 34px; }
+
+  /* journey bar — pins only, tiny */
+  .ny-journey { padding: 8px 12px 10px; }
+  body.has-journey main { padding-bottom: 72px; }
+  .ny-journey-track { height: 38px; }
+  .ny-journey-stage { font-size: 0 !important; gap: 4px !important; }
+  .ny-journey-stage::after {
+    content: attr(data-n);
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 8.5px;
+    letter-spacing: 0.1em;
+    color: var(--text-3);
+  }
+  .ny-journey-stage.current::after { color: var(--accent); font-weight: 600; }
+  .ny-journey-rail-fill, .ny-journey-rail { bottom: 14px; }
+  .ny-journey-auto { bottom: 16px; transform: translateX(-50%) scale(0.72); }
+
+  /* hero */
+  .hero { padding: 28px 0 16px !important; min-height: 0 !important; }
+  .hero-visual {
+    height: 260px !important;
+    border-radius: var(--r-lg) !important;
+  }
+  .hero-copy > p { font-size: 14.5px !important; max-width: 100%; }
+  .hero-ctas { gap: 8px !important; width: 100%; }
+  .hero-ctas .btn { flex: 1; justify-content: center; }
+  .hero-meta { grid-template-columns: 1fr 1fr; gap: 14px !important; margin-top: 28px !important; padding-top: 16px !important; }
+  .hero-meta .stat { padding: 0 !important; border: none !important; }
+  .hero-meta .stat-value { font-size: 19px !important; }
+
+  /* buttons — touch targets */
+  .btn     { min-height: 44px; padding: 11px 16px; }
+  .btn-lg  { min-height: 48px; padding: 13px 20px; font-size: 14.5px; }
+  .btn-sm  { min-height: 34px; padding: 6px 10px; font-size: 12px; }
+  .btn-block { width: 100%; }
+
+  /* inputs — 16px prevents iOS zoom */
+  .input, textarea.input, select.input {
+    font-size: 16px !important;
+    padding: 13px 14px !important;
+    min-height: 46px;
+  }
+  .input-group .input.with-prefix { padding-left: 64px !important; }
+  .input-prefix { left: 12px !important; font-size: 14px !important; }
+
+  /* OTP — big boxes, centred */
+  .otp-grid { gap: 8px !important; }
+  .otp-box { width: 52px !important; height: 60px !important; font-size: 24px !important; }
+
+  /* glass cards */
+  .glass, .glass-deep { padding: 22px !important; border-radius: var(--r-md) !important; }
+  .card { padding: 16px !important; }
+  .cx-corners::before, .cx-corners::after { width: 10px; height: 10px; }
+
+  /* feature grid + steps + trust */
+  .features { grid-template-columns: 1fr !important; }
+  .steps    { grid-template-columns: 1fr !important; }
+  .trust-row { grid-template-columns: 1fr 1fr !important; }
+  .trust-row .cell { padding: 18px 12px; border-right: none; border-bottom: 1px solid var(--line); }
+  .trust-row .cell:nth-child(2n) { border-right: none; }
+  .trust-row .cell .v { font-size: 22px; }
+  .trust-row .cell .l { font-size: 9.5px; margin-top: 4px; }
+
+  /* testimonials stack */
+  [style*="grid-template-columns: repeat(auto-fit, minmax(280px"],
+  [style*="grid-template-columns: repeat(auto-fit, minmax(260px"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* CTA block */
+  .cta-block { padding: 40px 20px !important; border-radius: var(--r-lg) !important; }
+
+  /* estimates tile */
+  .tile { grid-template-columns: 52px minmax(0, 1fr) auto !important; padding: 12px !important; gap: 12px !important; }
+  .tile-icon { width: 52px !important; height: 44px !important; }
+  .tile-name { font-size: 14px !important; }
+  .tile-meta { font-size: 11px !important; gap: 4px 8px !important; }
+  .tile-price { font-size: 15px !important; }
+  .tile-price .sub { font-size: 9.5px !important; }
+
+  /* login / otp grid */
+  main > .container[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+    min-height: 0 !important;
+  }
+  .brand-logo { width: 160px !important; }
+
+  /* estimates right panel spacing */
+  .est-right { gap: 12px !important; }
+  .trip-head { padding: 14px !important; }
+  .trip-meta { grid-template-columns: 1fr 1fr; gap: 8px !important; }
+
+  /* ride tracking card */
+  .status-card { padding: 18px !important; }
+  .status-title { font-size: 18px !important; }
+  .status-sub   { font-size: 13px !important; }
+  .ride-meta .val { font-size: 14px !important; }
+  .ride-meta .lbl { font-size: 9.5px !important; }
+  .ride-meta .cell { padding: 10px 12px !important; }
+  .driver-card { grid-template-columns: 44px 1fr auto !important; gap: 12px !important; padding: 14px !important; }
+  .driver-avatar { width: 44px !important; height: 44px !important; font-size: 16px !important; }
+  .driver-name   { font-size: 14.5px !important; }
+  .driver-meta   { font-size: 11.5px !important; }
+  .vehicle-plate { font-size: 11px !important; padding: 2px 6px !important; }
+  .otp-card .digits { font-size: 26px !important; letter-spacing: 0.2em !important; }
+  .actions { flex-direction: column; gap: 8px !important; }
+  .actions .btn { flex: none; width: 100%; min-width: 0 !important; }
+
+  /* profile aside + main stack */
+  main > .container[style*="grid-template-columns: .8fr 1.2fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  /* help + sos + settings 2-col stack */
+  main > .container[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* receipt */
+  .rc-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
+  #rc-map { height: 32vh !important; min-height: 220px !important; }
+
+  /* SOS */
+  .sos-btn { width: 160px !important; height: 160px !important; font-size: 26px !important; }
+
+  /* toasts */
+  .toast-stack { left: 12px !important; right: 12px !important; bottom: 80px !important; max-width: none !important; }
+  .toast { font-size: 13px; }
+
+  /* modals */
+  .modal { width: 94vw !important; padding: 22px !important; }
+
+  /* 404 display number */
+  .display-number { font-size: 40vw !important; }
+
+  /* Marquee tighter on mobile */
+  .marquee-track { gap: 22px; font-size: 10.5px !important; }
+
+  /* dropdowns / autocomplete */
+  .autocomplete { max-height: 260px !important; }
+  .autocomplete-item .desc { font-size: 13px !important; }
+
+  /* scan-line / corners scale down */
+  .scan::before { display: none; }                  /* kill extra motion on small screens */
+  .hud-ribbon   { gap: 14px; padding: 6px 0; font-size: 9.5px; }
+
+  /* home page pill */
+  .pill-live { padding: 4px 10px 4px 8px; font-size: 9.5px; }
+
+  /* recent-chips row on home */
+  #recent-chips { gap: 6px !important; }
+  #recent-chips .chip-btn { font-size: 10.5px !important; padding: 4px 10px !important; }
+}
+
+/* ============================================================
+   Tiny phones (iPhone SE 1st-gen class, 320–420px)
+   ============================================================ */
+@media (max-width: 420px) {
+  .container { width: 94vw; }
+  .page { padding: 18px 0 76px; }
+
+  h1 { font-size: clamp(1.7rem, 9vw, 2.2rem) !important; }
+  h2 { font-size: clamp(1.25rem, 6vw, 1.5rem) !important; }
+
+  .hero-visual { height: 220px !important; }
+  .hero-meta   { grid-template-columns: 1fr 1fr; }
+
+  /* OTP */
+  .otp-box { width: 46px !important; height: 56px !important; font-size: 22px !important; }
+  .otp-grid { gap: 6px !important; }
+
+  /* tighter tile */
+  .tile { grid-template-columns: 44px minmax(0, 1fr) auto !important; gap: 10px !important; padding: 10px !important; }
+  .tile-icon { width: 44px !important; height: 38px !important; }
+  .tile-name { font-size: 13px !important; }
+
+  .btn-lg { padding: 12px 16px; font-size: 13.5px; }
+
+  .glass, .glass-deep { padding: 18px !important; }
+
+  /* trust row: 1 column */
+  .trust-row { grid-template-columns: 1fr !important; }
+  .trust-row .cell { border-right: none !important; border-bottom: 1px solid var(--line); }
+  .trust-row .cell:last-child { border-bottom: none; }
+
+  /* status card */
+  .status-steps { gap: 2px !important; }
+  .status-step .label { font-size: 8.5px !important; letter-spacing: 0.08em !important; }
+}
+
+/* ============================================================
+   Landscape phones (short viewport, keep hero out of the way)
+   ============================================================ */
+@media (max-height: 520px) and (orientation: landscape) {
+  .hero         { padding: 12px 0 !important; gap: 16px !important; }
+  .hero-visual  { height: 200px !important; }
+  .ny-journey   { padding: 6px 10px 8px !important; }
+  body.has-journey main { padding-bottom: 60px; }
+}
+
+/* ============================================================
+   Safe-area insets for notch / home-indicator devices
+   ============================================================ */
+@supports (padding: max(0px)) {
+  .nav { padding-top: env(safe-area-inset-top); }
+  body.has-journey .ny-journey {
+    padding-bottom: max(10px, env(safe-area-inset-bottom)) !important;
+  }
+  body.has-journey main {
+    padding-bottom: calc(72px + env(safe-area-inset-bottom)) !important;
+  }
+}
+
+/* ============================================================
+   Pointer: coarse (phones + tablets) — remove pure-desktop effects
+   ============================================================ */
+@media (pointer: coarse) {
+  /* kill 3D tilt / magnetic hover on touch — they feel wrong */
+  [data-tilt] { transform: none !important; }
+  .btn::before { display: none; }
+  /* but keep tap feedback */
+  .btn:active { transform: scale(0.98); }
+  .tile:active { transform: scale(0.99); }
+}
