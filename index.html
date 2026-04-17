@@ -12,62 +12,75 @@
   <link rel="stylesheet" href="assets/css/components.css" />
   <link rel="stylesheet" href="assets/css/3d.css" />
   <link rel="stylesheet" href="assets/css/premium.css" />
+  <link rel="stylesheet" href="assets/css/futuristic.css" />
 </head>
-<body>
+<body data-smooth-scroll="1">
 
 <nav class="nav" data-nav></nav>
 
 <main>
   <!-- ============ 1. HERO ============ -->
-  <section class="container hero scene-3d">
+  <section class="container hero scene-3d aurora-stage hero-3d" data-parallax-scope>
     <div class="grid-floor" aria-hidden="true"></div>
+    <div class="ambient-orb" style="left: -18%; top: 20%; --parallax-strength: 18px;" aria-hidden="true" data-parallax-layer></div>
+    <div class="ambient-orb is-secondary" style="right: -12%; bottom: 5%; --parallax-strength: 28px;" aria-hidden="true" data-parallax-layer></div>
 
-    <div class="hero-copy">
-      <span class="holo-badge">Live network · Bengaluru</span>
+    <div class="hero-copy depth" data-depth="2">
+      <span class="beacon">Live network · Bengaluru · 2 min ETA</span>
 
-      <h1 style="margin-top: 20px;">
-        The ride you<br/>
-        <span class="serif">deserve</span> —<br/>
-        fair for all.
+      <h1 style="margin-top: 22px;">
+        <span data-split-text>The ride you</span><br/>
+        <span class="serif gradient-text-gold" data-split-text>deserve</span> —<br/>
+        <span class="shimmer-text" data-split-text>fair for all.</span>
       </h1>
 
-      <p>
+      <p data-reveal style="--reveal-delay: 0.18s;">
         Zero platform commission. Real drivers keeping their full earnings. One tap to book an auto or cab across fifteen Indian cities — on an open network built in public.
       </p>
 
-      <div class="hero-ctas">
-        <a class="btn btn-primary btn-lg" href="login.html">Book a ride &nbsp;→</a>
-        <a class="btn btn-ghost btn-lg" href="#how-it-works">How it works</a>
+      <div class="hero-ctas" data-reveal style="--reveal-delay: 0.3s;">
+        <a class="btn btn-primary btn-neon btn-lg" href="login.html" data-magnetic="80">Book a ride &nbsp;→</a>
+        <a class="btn btn-liquid btn-lg" href="#how-it-works" data-magnetic="60">How it works</a>
       </div>
 
-      <div class="hero-meta">
-        <div class="stat">
-          <span class="stat-label">Tiers</span>
-          <span class="stat-value">07</span>
+      <div class="hud" data-reveal style="--reveal-delay: 0.42s; margin-top: 36px;">
+        <div class="hud-cell">
+          <span class="hud-label">Tiers</span>
+          <span class="hud-value">07</span>
         </div>
-        <div class="stat">
-          <span class="stat-label">Commission</span>
-          <span class="stat-value">0<span class="serif">%</span></span>
+        <div class="hud-cell">
+          <span class="hud-label">Commission</span>
+          <span class="hud-value acc">0<span class="unit">%</span></span>
         </div>
-        <div class="stat">
-          <span class="stat-label">Rides booked</span>
-          <span class="stat-value mono count-up" data-countup="150000000" data-suffix="+">0</span>
+        <div class="hud-cell">
+          <span class="hud-label">Rides booked</span>
+          <span class="hud-value mono count-up" data-countup="150000000" data-suffix="+">0</span>
+        </div>
+        <div class="hud-cell">
+          <span class="hud-label">Cities</span>
+          <span class="hud-value">15<span class="unit">+</span></span>
         </div>
       </div>
     </div>
 
-    <aside class="hero-visual stage halo">
-      <!-- Primary hero art: hand-crafted animated auto-rickshaw SVG -->
-      <img class="hero-svg-bg" src="assets/img/readme-hero.svg" alt="NammaYatri auto rickshaw driving through a Bengaluru cityscape"
-           style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; pointer-events: none; z-index: 1; border-radius: inherit;" />
-      <!-- Optional three.js overlay — adds real-time depth when WebGL is available, subtle so it doesn't fight the hero art -->
-      <div id="three-hero" style="position: absolute; inset: 0; z-index: 2; opacity: 0.22; mix-blend-mode: screen; pointer-events: none;" aria-hidden="true"></div>
-      <div style="position: absolute; top: 16px; right: 18px; z-index: 2;" class="holo-badge">TRACKING ONLINE</div>
-      <div style="position: absolute; bottom: 18px; left: 20px; z-index: 2;">
-        <dl class="readouts">
-          <dt>status</dt><dd class="ok">Network live</dd>
-          <dt>city</dt><dd>Bengaluru</dd>
+    <aside class="hero-visual stage halo depth holo-card" data-depth="3" data-tilt-3d data-tilt-max="6" data-tilt-scale="12" data-spotlight style="padding: 0;">
+      <img class="hero-svg-bg" src="assets/img/auto-animated.svg" alt=""
+          style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; pointer-events: none; z-index: 0; opacity: 0.9;" aria-hidden="true" />
+      <div class="holo-lines" aria-hidden="true"></div>
+      <div id="three-hero" style="position: absolute; inset: 0; z-index: 1; opacity: 0.9;" aria-hidden="true"></div>
+
+      <div style="position: absolute; top: 18px; right: 18px; z-index: 3;" class="beacon">Tracking online</div>
+
+      <div style="position: absolute; top: 18px; left: 18px; z-index: 3;">
+        <div class="holo-badge" data-scramble-hover>FLEET · 07 TIERS</div>
+      </div>
+
+      <div style="position: absolute; bottom: 20px; left: 20px; right: 20px; z-index: 3;">
+        <dl class="readouts" style="grid-template-columns: auto 1fr auto 1fr; gap: 6px 14px;">
+          <dt>status</dt><dd class="ok" data-scramble>Network live</dd>
+          <dt>city</dt><dd data-scramble>Bengaluru</dd>
           <dt>now</dt><dd class="mono" id="hero-clock">—</dd>
+          <dt>eta</dt><dd class="acc">2<span style="color:var(--text-3); font-family: var(--font-mono); margin-left:4px;">min</span></dd>
         </dl>
       </div>
     </aside>
@@ -92,50 +105,50 @@
   <!-- ============ 3. FEATURE GRID ============ -->
   <section class="container section" id="features">
     <header class="section-header">
-      <div>
+      <div data-reveal>
         <span class="eyebrow">Every ride, covered</span>
-        <h2>One app. Every moment of<br/>the trip, considered.</h2>
+        <h2>One app. Every moment of<br/>the trip, <span class="serif">considered.</span></h2>
       </div>
-      <p>From the OTP you type in to the star you give your driver, every screen is designed to feel calm, fast and honest.</p>
+      <p data-reveal="slide-right">From the OTP you type in to the star you give your driver, every screen is designed to feel calm, fast and honest.</p>
     </header>
 
-    <div class="features stagger-in">
-      <a class="feature reveal" href="login.html">
+    <div class="features stagger-in" data-reveal-wave>
+      <a class="feature" href="login.html" data-tilt-3d data-tilt-max="4" data-tilt-scale="6" data-spotlight>
         <div class="feature-icon">01</div>
         <h3>Sign in with your number</h3>
         <p>Your mobile number and a six-digit code — same account as the NammaYatri mobile app.</p>
       </a>
-      <a class="feature reveal" href="home.html">
+      <a class="feature" href="home.html" data-tilt-3d data-tilt-max="4" data-tilt-scale="6" data-spotlight>
         <div class="feature-icon">02</div>
         <h3>Pick-up &amp; drop</h3>
         <p>Search, tap, or drag the marker. Autocomplete understands landmarks, localities and long addresses.</p>
       </a>
-      <a class="feature reveal" href="estimates.html">
+      <a class="feature" href="estimates.html" data-tilt-3d data-tilt-max="4" data-tilt-scale="6" data-spotlight>
         <div class="feature-icon">03</div>
         <h3>Seven tiers, one view</h3>
         <p>Auto, Auto Priority, Non-AC, AC, Sedan Premium, XL, XL Premium — each with a transparent fare range.</p>
       </a>
-      <a class="feature reveal" href="ride.html">
+      <a class="feature" href="ride.html" data-tilt-3d data-tilt-max="4" data-tilt-scale="6" data-spotlight>
         <div class="feature-icon">04</div>
         <h3>Live trip view</h3>
         <p>Watch your driver approach, share the trip OTP and follow the vehicle right up to your pick-up.</p>
       </a>
-      <a class="feature reveal" href="rides.html">
+      <a class="feature" href="rides.html" data-tilt-3d data-tilt-max="4" data-tilt-scale="6" data-spotlight>
         <div class="feature-icon">05</div>
         <h3>Ride history</h3>
         <p>Every booking, fare breakup, distance and rating — neatly sorted and always in reach.</p>
       </a>
-      <a class="feature reveal" href="profile.html">
+      <a class="feature" href="profile.html" data-tilt-3d data-tilt-max="4" data-tilt-scale="6" data-spotlight>
         <div class="feature-icon">06</div>
         <h3>Your profile</h3>
         <p>Name, email, language and preferences, synced with your NammaYatri account across devices.</p>
       </a>
-      <a class="feature reveal" href="help.html">
+      <a class="feature" href="help.html" data-tilt-3d data-tilt-max="4" data-tilt-scale="6" data-spotlight>
         <div class="feature-icon">07</div>
         <h3>Help &amp; safety</h3>
         <p>Raise a ticket, add emergency contacts, trigger an SOS broadcast — help, one tap away.</p>
       </a>
-      <a class="feature reveal" href="referral.html">
+      <a class="feature" href="referral.html" data-tilt-3d data-tilt-max="4" data-tilt-scale="6" data-spotlight>
         <div class="feature-icon">08</div>
         <h3>Referral</h3>
         <p>Share your invite code. When a friend rides, you both get rewarded — on a zero-commission network.</p>
@@ -143,9 +156,11 @@
     </div>
   </section>
 
-  <!-- ============ 4. TRUST ROW ============ -->
+  <div class="container"><div class="chrome-divider" aria-hidden="true"></div></div>
+
+  <!-- ============ 4. TRUST ROW + CITY NETWORK ============ -->
   <section class="container section" style="padding-top: 0;">
-    <div class="trust-row reveal">
+    <div class="trust-row" data-reveal>
       <div class="cell">
         <div class="v">0<span class="serif">%</span></div>
         <div class="l">Platform commission</div>
@@ -163,20 +178,31 @@
         <div class="l">Indian cities</div>
       </div>
     </div>
+
+    <div class="city-cluster" data-reveal="zoom" style="margin-top: 28px;"
+         data-city-cluster
+         data-cities="Bengaluru, Mysuru, Chennai, Hyderabad, Kochi, Delhi NCR, Bhubaneswar, Mangaluru, Tumakuru, Thiruvananthapuram">
+      <div class="holo-lines" aria-hidden="true"></div>
+      <div style="position:absolute; top:16px; left:16px; z-index:2;">
+        <div class="eyebrow">Network map</div>
+        <div class="mono" style="color: var(--text-3); font-size: 11px; margin-top: 4px;">10 live cities · expanding</div>
+      </div>
+      <div style="position:absolute; bottom:16px; right:16px; z-index:2;" class="beacon">Live</div>
+    </div>
   </section>
 
   <!-- ============ 5. TESTIMONIALS ============ -->
   <section class="container section" style="padding-top: 40px;" aria-label="What riders say">
     <header class="section-header">
-      <div>
+      <div data-reveal>
         <span class="eyebrow">From riders</span>
         <h2>A network that feels<br/>on <span class="serif">your</span> side.</h2>
       </div>
-      <p>Real stories from riders and drivers who use NammaYatri every day.</p>
+      <p data-reveal="slide-right">Real stories from riders and drivers who use NammaYatri every day.</p>
     </header>
 
-    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
-      <article class="testimonial reveal">
+    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;" data-reveal-wave>
+      <article class="testimonial holo-card" data-spotlight data-tilt-3d data-tilt-max="4">
         <p class="testimonial-quote">The fare I see is the fare I pay. No surge games, no weird cancellations — just an honest auto to the office every morning.</p>
         <div class="testimonial-meta">
           <div class="avatar">P</div>
@@ -187,7 +213,7 @@
         </div>
       </article>
 
-      <article class="testimonial reveal">
+      <article class="testimonial holo-card" data-spotlight data-tilt-3d data-tilt-max="4">
         <p class="testimonial-quote">My driver said he keeps his full earnings on this app. That is reason enough. The ride was smooth; the driver, smiling.</p>
         <div class="testimonial-meta">
           <div class="avatar">A</div>
@@ -198,7 +224,7 @@
         </div>
       </article>
 
-      <article class="testimonial reveal">
+      <article class="testimonial holo-card" data-spotlight data-tilt-3d data-tilt-max="4">
         <p class="testimonial-quote">Booked an auto at 11pm near Marina Beach — three minutes, live tracking, clean fare. This is what a city deserves.</p>
         <div class="testimonial-meta">
           <div class="avatar">R</div>
@@ -214,35 +240,35 @@
   <!-- ============ 6. SIX STEPS ============ -->
   <section class="container section" id="how-it-works">
     <header class="section-header">
-      <div>
+      <div data-reveal>
         <span class="eyebrow">How it works</span>
         <h2>Six steps to<br/>your <span class="serif">ride</span>.</h2>
       </div>
-      <p>Simple, honest and fast — the way getting a ride was always meant to feel.</p>
+      <p data-reveal="slide-right">Simple, honest and fast — the way getting a ride was always meant to feel.</p>
     </header>
 
-    <div class="steps stagger-in">
-      <article class="step reveal">
+    <div class="steps stagger-in" data-reveal-wave>
+      <article class="step">
         <h3>Sign in</h3>
         <p>Enter your mobile number, receive a one-time code, and you are in. No passwords to remember.</p>
       </article>
-      <article class="step reveal">
+      <article class="step">
         <h3>Pick your route</h3>
         <p>Search or tap for pick-up and drop. Drag the pin to get it just right.</p>
       </article>
-      <article class="step reveal">
+      <article class="step">
         <h3>Choose a tier</h3>
         <p>Compare autos, sedans and XLs side-by-side — with clear fares, seats and AC at a glance.</p>
       </article>
-      <article class="step reveal">
+      <article class="step">
         <h3>Confirm</h3>
         <p>Lock your quote. We find the nearest driver and share your OTP and car details in seconds.</p>
       </article>
-      <article class="step reveal">
+      <article class="step">
         <h3>Track live</h3>
         <p>Watch the driver on the map, share trip details with a loved one, and feel safe all the way.</p>
       </article>
-      <article class="step reveal">
+      <article class="step">
         <h3>Rate &amp; go</h3>
         <p>Thank your driver with a tap. Feedback reaches them directly — no middleman, no edits.</p>
       </article>
@@ -251,29 +277,31 @@
 
   <!-- ============ 7. REFERRAL BANNER ============ -->
   <section class="container section" style="padding-top: 20px;">
-    <aside class="cta-block reveal" style="text-align: left; padding: 52px 48px;">
-      <img src="assets/img/hero/referral.webp" alt=""
-           style="max-width: 200px; height: auto; float: right; margin: 0 0 16px 24px; border-radius: var(--r-lg);"
-           data-parallax="0.1" />
-      <span class="eyebrow">Invite</span>
-      <h2 style="margin: 12px 0;">Bring a friend.<br/>Earn <span class="serif">together</span>.</h2>
-      <p style="max-width: 44ch; margin: 0 0 22px;">Share your invite code. When a friend takes their first ride, you both get rewarded — on the only network where drivers keep every rupee they earn.</p>
-      <div class="row" style="flex-wrap: wrap;">
-        <a class="btn btn-primary btn-lg" href="referral.html">Get your code &nbsp;→</a>
-        <a class="btn btn-ghost btn-lg" href="#features">See what's inside</a>
+    <aside class="refract" data-reveal="zoom">
+      <div class="refract-inner aurora-stage" style="text-align: left; padding: 52px 48px;">
+        <img src="assets/img/hero/referral.webp" alt=""
+             style="max-width: 200px; height: auto; float: right; margin: 0 0 16px 24px; border-radius: var(--r-lg);"
+             data-parallax="0.1" />
+        <span class="eyebrow">Invite</span>
+        <h2 style="margin: 12px 0;">Bring a friend.<br/>Earn <span class="serif">together</span>.</h2>
+        <p style="max-width: 44ch; margin: 0 0 22px;">Share your invite code. When a friend takes their first ride, you both get rewarded — on the only network where drivers keep every rupee they earn.</p>
+        <div class="row" style="flex-wrap: wrap;">
+          <a class="btn btn-primary btn-neon btn-lg" href="referral.html" data-magnetic="80">Get your code &nbsp;→</a>
+          <a class="btn btn-liquid btn-lg" href="#features">See what's inside</a>
+        </div>
       </div>
     </aside>
   </section>
 
   <!-- ============ 8. FINAL CTA ============ -->
   <section class="container section">
-    <div class="cta-block reveal">
+    <div class="cta-block aurora-stage" data-reveal style="padding: 80px 40px;">
       <span class="eyebrow">Ready</span>
       <h2 style="margin: 10px 0;">Begin the <span class="serif">trip</span>.</h2>
       <p style="max-width: 44ch; margin: 0 auto 22px;">One static bundle. One open network. The rest is just pressing the call button.</p>
       <div class="row" style="justify-content: center;">
-        <a class="btn btn-primary btn-lg" href="login.html">Start</a>
-        <a class="btn btn-ghost btn-lg" href="settings.html">Settings</a>
+        <a class="btn btn-primary btn-neon btn-lg" href="login.html" data-magnetic="90">Start</a>
+        <a class="btn btn-liquid btn-lg" href="settings.html">Settings</a>
       </div>
     </div>
   </section>
@@ -315,6 +343,7 @@
 <script src="assets/js/api.js"></script>
 <script src="assets/js/ui.js"></script>
 <script src="assets/js/motion.js"></script>
+<script src="assets/js/futuristic.js"></script>
 <script src="https://unpkg.com/three@0.158.0/build/three.min.js"></script>
 <script src="assets/js/three-hero.js"></script>
 <script>

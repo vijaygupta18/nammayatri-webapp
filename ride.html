@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="assets/css/3d.css" />
   <link rel="stylesheet" href="assets/css/premium.css" />
   <link rel="stylesheet" href="assets/css/scenes.css" />
+  <link rel="stylesheet" href="assets/css/futuristic.css" />
   <link rel="stylesheet" href="assets/css/map.css" />
   <style>
     .ride-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; }
@@ -173,14 +174,14 @@
         <span class="eyebrow" id="booking-id">Booking · …</span>
         <h2 style="margin-top: 6px;">Your ride</h2>
       </div>
-      <div class="pill"><span class="dot"></span> <span id="live-status">Searching</span></div>
+      <span class="pill-live" id="live-status-wrap"><span id="live-status">Searching</span></span>
     </div>
 
     <div class="ride-grid">
       <div id="track-map"></div>
 
       <aside>
-        <div class="status-card">
+        <div class="status-card cx-corners scan">
           <h3 class="status-title" id="status-title">Finding a driver</h3>
           <p class="status-sub" id="status-sub">Matching you with the nearest partner.</p>
 
@@ -232,6 +233,7 @@
 <script src="assets/js/api.js"></script>
 <script src="assets/js/ui.js"></script>
 <script src="assets/js/motion.js"></script>
+<script src="assets/js/futuristic.js"></script>
 <script src="assets/js/ride.js"></script>
 
 <script src="https://unpkg.com/three@0.158.0/build/three.min.js"></script>
