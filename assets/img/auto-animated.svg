@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Animated NammaYatri auto rickshaw driving through a cityscape">
+  <title>NammaYatri auto rickshaw</title>
+
+  <!-- ============ THEME-AWARE PALETTE ============
+       Uses `currentColor` + CSS custom properties so the illustration
+       inherits ink colour from whatever context embeds it. -->
+  <style>
+    :root, svg { color: #0F1115; }
+    @media (prefers-color-scheme: dark) { svg { color: #F2F3F7; } }
+    svg[data-theme="dark"]  { color: #F2F3F7; }
+    svg[data-theme="light"] { color: #0F1115; }
+
+    .bg-soft   { fill: color-mix(in srgb, currentColor 4%, transparent); }
+    .bg-stroke { stroke: color-mix(in srgb, currentColor 10%, transparent); }
+    .city      { fill: color-mix(in srgb, currentColor 10%, transparent); }
+    .road      { fill: color-mix(in srgb, currentColor 85%, transparent); }
+    .road-edge { stroke: color-mix(in srgb, currentColor 18%, transparent); }
+    .ink       { fill: currentColor; }
+    .ink-s     { stroke: currentColor; }
+
+    /* brand */
+    .ny-yellow   { fill: #FCC32C; }
+    .ny-yellow-2 { fill: #FFD75C; }
+    .ny-black    { fill: #14161C; }
+    .ny-amber    { fill: #FFAE00; }
+    .tyre        { fill: #111317; }
+    .hub         { fill: #2B2E36; }
+    .glass       { fill: #A9BECB; opacity: 0.55; }
+    .chrome      { fill: #D8DBE2; }
+
+    /* chassis bounce */
+    .chassis { animation: bounce 0.48s cubic-bezier(0.4, 0, 0.6, 1) infinite alternate; transform-origin: 320px 220px; }
+    @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-2.5px); } }
+
+    /* sway — body tilts slightly as it drives */
+    .rig { animation: sway 2.4s ease-in-out infinite alternate; transform-origin: 320px 240px; }
+    @keyframes sway { from { transform: rotate(-0.6deg); } to { transform: rotate(0.6deg); } }
+
+    /* exhaust puffs */
+    .puff { opacity: 0; animation: puff 1.2s ease-out infinite; }
+    .puff.p1 { animation-delay: 0s; }
+    .puff.p2 { animation-delay: 0.4s; }
+    .puff.p3 { animation-delay: 0.8s; }
+    @keyframes puff {
+      0%   { transform: translate(0, 0) scale(0.6); opacity: 0; }
+      15%  { opacity: 0.55; }
+      100% { transform: translate(-40px, -28px) scale(1.8); opacity: 0; }
+    }
+
+    /* headlight beam + glow */
+    .beam  { animation: beam 2.4s ease-in-out infinite; transform-origin: 475px 200px; }
+    .glow  { animation: glow 1.6s ease-in-out infinite alternate; }
+    @keyframes beam { 0%,100% { opacity: 0.55; } 50% { opacity: 0.9; } }
+    @keyframes glow { from { opacity: 0.35; transform: scale(1); } to { opacity: 0.8; transform: scale(1.15); } }
+
+    /* fare-meter digit flicker */
+    .digit { animation: flicker 3.6s steps(1) infinite; }
+    @keyframes flicker { 0%, 33% { opacity: 1; } 33.5%, 35% { opacity: 0.15; } 35.5%, 66% { opacity: 1; } 66.5%, 67% { opacity: 0.4; } 67.5%, 100% { opacity: 1; } }
+
+    /* reduce motion */
+    @media (prefers-reduced-motion: reduce) {
+      .chassis, .rig, .puff, .beam, .glow, .digit,
+      .wheel-spin circle:last-child, .road-dash,
+      .cloud, .bird { animation: none !important; }
+      .road-dash line { stroke-dashoffset: 0 !important; }
+    }
+  </style>
+
+  <defs>
+    <!-- soft ground shadow -->
+    <radialGradient id="shadow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"  stop-color="#000" stop-opacity="0.22"/>
+      <stop offset="60%" stop-color="#000" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- wheel: 3-segment tyre with inner hub and a rotating spoke pattern -->
+    <g id="wheel">
+      <circle r="22" class="tyre"/>
+      <circle r="16" class="hub"/>
+      <!-- 4 amber spokes, rotates continuously -->
+      <g class="wheel-spin">
+        <g>
+          <rect x="-1.4" y="-15" width="2.8" height="30" class="ny-yellow"/>
+          <rect x="-1.4" y="-15" width="2.8" height="30" class="ny-yellow" transform="rotate(90)"/>
+          <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="0.55s" repeatCount="indefinite"/>
+        </g>
+        <circle r="5" class="chrome"/>
+      </g>
+    </g>
+
+    <!-- mini cloud used in the sky -->
+    <g id="cloud">
+      <ellipse cx="0"  cy="0" rx="22" ry="8" class="city"/>
+      <ellipse cx="14" cy="-3" rx="14" ry="7" class="city"/>
+      <ellipse cx="-14" cy="-2" rx="12" ry="6" class="city"/>
+    </g>
+  </defs>
+
+  <!-- ============ SKY + FAR CITY ============ -->
+  <rect width="640" height="360" class="bg-soft"/>
+
+  <!-- drifting clouds -->
+  <g class="cloud" style="animation: drift 26s linear infinite;">
+    <use href="#cloud" x="0"   y="60"/>
+    <use href="#cloud" x="260" y="40"/>
+    <use href="#cloud" x="520" y="72"/>
+    <animateTransform attributeName="transform" type="translate" from="80 0" to="-560 0" dur="26s" repeatCount="indefinite"/>
+  </g>
+
+  <!-- skyline silhouettes (city) -->
+  <g class="city">
+    <rect x="0"   y="180" width="48"  height="40"/>
+    <rect x="48"  y="160" width="38"  height="60"/>
+    <rect x="86"  y="200" width="26"  height="20"/>
+    <rect x="112" y="150" width="54"  height="70"/>
+    <!-- windows in the tallest -->
+    <rect x="122" y="162" width="4" height="6" class="ny-yellow"/>
+    <rect x="132" y="162" width="4" height="6" class="ny-yellow"/>
+    <rect x="142" y="162" width="4" height="6" class="ny-yellow"/>
+    <rect x="122" y="178" width="4" height="6" class="ny-yellow"/>
+    <rect x="142" y="178" width="4" height="6" class="ny-yellow"/>
+
+    <rect x="166" y="190" width="44" height="30"/>
+    <rect x="210" y="140" width="62" height="80"/>
+    <rect x="224" y="150" width="4" height="6" class="ny-yellow"/>
+    <rect x="234" y="150" width="4" height="6" class="ny-yellow"/>
+    <rect x="244" y="150" width="4" height="6" class="ny-yellow"/>
+    <rect x="224" y="166" width="4" height="6" class="ny-yellow"/>
+    <rect x="244" y="166" width="4" height="6" class="ny-yellow"/>
+    <rect x="254" y="166" width="4" height="6" class="ny-yellow"/>
+    <rect x="234" y="182" width="4" height="6" class="ny-yellow"/>
+
+    <rect x="272" y="170" width="40" height="50"/>
+    <rect x="312" y="130" width="58" height="90"/>
+    <rect x="322" y="140" width="4" height="6" class="ny-yellow"/>
+    <rect x="332" y="140" width="4" height="6" class="ny-yellow"/>
+    <rect x="342" y="140" width="4" height="6" class="ny-yellow"/>
+    <rect x="352" y="140" width="4" height="6" class="ny-yellow"/>
+    <rect x="322" y="156" width="4" height="6" class="ny-yellow"/>
+    <rect x="342" y="156" width="4" height="6" class="ny-yellow"/>
+    <rect x="322" y="172" width="4" height="6" class="ny-yellow"/>
+    <rect x="352" y="172" width="4" height="6" class="ny-yellow"/>
+
+    <rect x="370" y="170" width="32" height="50"/>
+    <rect x="402" y="150" width="48" height="70"/>
+    <rect x="450" y="180" width="40" height="40"/>
+    <rect x="490" y="155" width="44" height="65"/>
+    <rect x="500" y="164" width="4" height="6" class="ny-yellow"/>
+    <rect x="510" y="164" width="4" height="6" class="ny-yellow"/>
+    <rect x="520" y="164" width="4" height="6" class="ny-yellow"/>
+    <rect x="500" y="180" width="4" height="6" class="ny-yellow"/>
+    <rect x="520" y="180" width="4" height="6" class="ny-yellow"/>
+
+    <rect x="534" y="190" width="36" height="30"/>
+    <rect x="570" y="170" width="36" height="50"/>
+    <rect x="606" y="195" width="34" height="25"/>
+  </g>
+
+  <!-- distant birds -->
+  <g class="bird" opacity="0.4" transform="translate(80 110)">
+    <path d="M0 0 Q 4 -4 8 0 Q 12 -4 16 0" fill="none" stroke="currentColor" stroke-width="1.2"/>
+    <animateTransform attributeName="transform" type="translate" values="600 110; -40 130" dur="18s" repeatCount="indefinite"/>
+  </g>
+  <g class="bird" opacity="0.35" transform="translate(260 90)">
+    <path d="M0 0 Q 3 -3 6 0 Q 9 -3 12 0" fill="none" stroke="currentColor" stroke-width="1"/>
+    <animateTransform attributeName="transform" type="translate" values="660 90; -40 115" dur="22s" repeatCount="indefinite" begin="-5s"/>
+  </g>
+
+  <!-- ============ ROAD ============ -->
+  <rect x="0" y="260" width="640" height="74" class="road"/>
+  <line x1="0" y1="260" x2="640" y2="260" class="road-edge" stroke-width="1"/>
+  <line x1="0" y1="334" x2="640" y2="334" class="road-edge" stroke-width="1"/>
+
+  <!-- scrolling dashed centre line -->
+  <g class="road-dash">
+    <line x1="-60" y1="305" x2="700" y2="305" stroke="#FCC32C" stroke-width="3" stroke-dasharray="24 18">
+      <animate attributeName="stroke-dashoffset" from="0" to="-42" dur="0.55s" repeatCount="indefinite"/>
+    </line>
+  </g>
+
+  <!-- ground shadow under the rickshaw -->
+  <ellipse cx="320" cy="300" rx="110" ry="10" fill="url(#shadow)"/>
+
+  <!-- ============ AUTO RICKSHAW ============ -->
+  <g class="rig">
+   <g class="chassis" transform="translate(320 220)">
+
+    <!-- exhaust puffs — emitted from the left (tail) -->
+    <g transform="translate(-100 38)">
+      <circle class="puff p1" r="7" fill="currentColor" opacity="0.5"/>
+      <circle class="puff p2" r="6" fill="currentColor" opacity="0.4" cx="4" cy="-3"/>
+      <circle class="puff p3" r="5" fill="currentColor" opacity="0.45" cx="8" cy="2"/>
+    </g>
+
+    <!-- license plate (yellow) on the rear -->
+    <rect x="-110" y="8" width="28" height="14" rx="2" class="ny-yellow-2"/>
+    <text x="-96" y="19" text-anchor="middle" font-family="monospace" font-size="8" fill="#14161C" class="digit">NY·01</text>
+
+    <!-- lower body (yellow tub with rounded corners) -->
+    <path d="
+      M -100 0
+      Q -104 -30, -80 -34
+      L -40 -40
+      Q -10 -48, 30 -48
+      L 60 -48
+      Q 90 -48, 100 -22
+      L 104 2
+      Q 106 14, 96 20
+      L -92 20
+      Q -104 18, -100 0 Z
+    " class="ny-yellow"/>
+
+    <!-- highlight on the yellow body -->
+    <path d="M -80 -12 Q -20 -30, 70 -30 L 80 -28" fill="none" stroke="#FFE089" stroke-width="2" stroke-linecap="round"/>
+
+    <!-- canopy (black roof) -->
+    <path d="
+      M -60 -48
+      Q -60 -84, -20 -84
+      L 40 -84
+      Q 80 -84, 80 -54
+      L 80 -48
+      Z
+    " class="ny-black"/>
+
+    <!-- canopy stitch line (amber) -->
+    <path d="M -58 -50 Q 0 -80, 78 -50" fill="none" stroke="#FCC32C" stroke-width="1.2" opacity="0.55"/>
+
+    <!-- windshield (tinted glass) -->
+    <path d="M 46 -80 L 78 -50 L 78 -44 L 40 -44 Z" class="glass"/>
+    <!-- side open frame suggestion -->
+    <path d="M -56 -46 L -56 -78 L -16 -78" fill="none" stroke="#14161C" stroke-width="1.5"/>
+    <path d="M -12 -46 L -12 -78"          fill="none" stroke="#14161C" stroke-width="1"  opacity="0.5"/>
+    <path d="M  20 -46 L  20 -78"          fill="none" stroke="#14161C" stroke-width="1"  opacity="0.5"/>
+
+    <!-- driver silhouette -->
+    <circle cx="30"  cy="-62" r="6" class="ink"/>
+    <path   d="M 20 -56 Q 30 -46, 40 -56 L 40 -46 L 20 -46 Z" class="ink"/>
+
+    <!-- passenger silhouettes (back) -->
+    <circle cx="-20" cy="-62" r="5.5" class="ink" opacity="0.7"/>
+    <circle cx="-4"  cy="-62" r="5.5" class="ink" opacity="0.55"/>
+
+    <!-- side rail / grab bar -->
+    <rect x="-60" y="-28" width="120" height="2" class="ny-black"/>
+
+    <!-- mirror -->
+    <g transform="translate(60 -60)">
+      <rect x="0" y="0" width="2" height="10" class="ny-black"/>
+      <circle cx="1" cy="-2" r="3" class="chrome"/>
+    </g>
+
+    <!-- headlight -->
+    <g>
+      <circle cx="98"  cy="0" r="4.5" class="ny-amber"/>
+      <circle class="glow" cx="98" cy="0" r="10" fill="#FFAE00" opacity="0.35"/>
+    </g>
+
+    <!-- forward-facing light beam -->
+    <path class="beam" d="M 104 0 L 155 -18 L 155 18 Z" fill="#FFAE00" opacity="0.18"/>
+
+    <!-- decorative amber stripe along the waist -->
+    <rect x="-96" y="-4"  width="190" height="2.5" fill="#FCC32C"/>
+
+   </g>
+
+   <!-- WHEELS — sit slightly below the chassis, at the feet of the auto.
+        They don't share the vertical "bounce" so they stay on the road. -->
+   <!-- rear twin wheels -->
+   <use href="#wheel" x="250" y="268"/>
+   <use href="#wheel" x="292" y="268" opacity="0.95"/>
+   <!-- front single wheel -->
+   <use href="#wheel" x="408" y="268"/>
+
+   <!-- small speed lines to the left, underlining motion -->
+   <g opacity="0.5">
+     <line x1="190" y1="235" x2="215" y2="235" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+       <animate attributeName="x1" values="190; 100; 190" dur="0.8s" repeatCount="indefinite"/>
+       <animate attributeName="x2" values="215; 125; 215" dur="0.8s" repeatCount="indefinite"/>
+       <animate attributeName="opacity" values="0; 0.6; 0" dur="0.8s" repeatCount="indefinite"/>
+     </line>
+     <line x1="180" y1="252" x2="210" y2="252" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+       <animate attributeName="x1" values="180; 90; 180" dur="0.8s" begin="0.25s" repeatCount="indefinite"/>
+       <animate attributeName="x2" values="210; 120; 210" dur="0.8s" begin="0.25s" repeatCount="indefinite"/>
+       <animate attributeName="opacity" values="0; 0.5; 0" dur="0.8s" begin="0.25s" repeatCount="indefinite"/>
+     </line>
+     <line x1="195" y1="268" x2="225" y2="268" stroke="currentColor" stroke-width="1" stroke-linecap="round">
+       <animate attributeName="x1" values="195; 110; 195" dur="0.8s" begin="0.5s" repeatCount="indefinite"/>
+       <animate attributeName="x2" values="225; 140; 225" dur="0.8s" begin="0.5s" repeatCount="indefinite"/>
+       <animate attributeName="opacity" values="0; 0.45; 0" dur="0.8s" begin="0.5s" repeatCount="indefinite"/>
+     </line>
+   </g>
+
+  </g>
+
+</svg>
