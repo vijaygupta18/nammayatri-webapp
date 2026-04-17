@@ -17,7 +17,7 @@
   //   the value below with your worker URL, e.g. 'https://ny-web.<sub>.workers.dev'.
   //
   // Users can also override this at runtime via Settings → Proxy URL.
-  const WORKER_URL = 'http://localhost:9000';
+  const WORKER_URL = '';
 
   const DEFAULTS = {
     API_PROXY: WORKER_URL,
