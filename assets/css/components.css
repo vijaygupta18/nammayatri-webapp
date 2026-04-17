@@ -23,14 +23,7 @@
   overflow: hidden;
   white-space: nowrap;
 }
-.btn::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: radial-gradient(120px 60px at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%);
-  opacity: 0;
-  transition: opacity 0.25s var(--ease);
-  pointer-events: none;
-}
+.btn::before { display: none; content: none; }
 .btn:hover { border-color: var(--line-3); transform: translateY(-1px); box-shadow: var(--shadow-2); text-decoration: none; }
 .btn:hover::before { opacity: 1; }
 .btn:active { transform: translateY(0); }

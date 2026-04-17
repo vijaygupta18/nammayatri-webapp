@@ -423,22 +423,7 @@
   /* ---- Magnetic buttons ----
    * Sets --mx / --my CSS vars on .btn so ::before radial light follows cursor. */
   function magnetize(root = document) {
-    if (typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    root.querySelectorAll('.btn').forEach(el => {
-      if (el.__nyMagnet) return;
-      el.__nyMagnet = true;
-      el.addEventListener('pointermove', (e) => {
-        const r = el.getBoundingClientRect();
-        const mx = ((e.clientX - r.left) / r.width) * 100;
-        const my = ((e.clientY - r.top) / r.height) * 100;
-        el.style.setProperty('--mx', mx + '%');
-        el.style.setProperty('--my', my + '%');
-      });
-      el.addEventListener('pointerleave', () => {
-        el.style.setProperty('--mx', '50%');
-        el.style.setProperty('--my', '50%');
-      });
-    });
+    // intentionally disabled — cursor-following radial glow was removed.
   }
 
   /* ---- Auto motion ----
