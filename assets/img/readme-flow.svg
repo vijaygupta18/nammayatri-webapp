@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 200" role="img" aria-label="The NammaYatri rider journey: sign in, search, pick, confirm, track, rate.">
+  <title>Ride flow — sign in → search → pick → confirm → track → rate</title>
+
+  <defs>
+    <!-- reusable mini rickshaw used as a marker that travels across the journey -->
+    <g id="auto-mini">
+      <rect x="-25" y="-12" width="50" height="3" fill="#000" opacity="0.15"/> <!-- ground shadow -->
+      <!-- body -->
+      <path d="M -22 -14 Q -24 -24, -14 -26 L 8 -28 Q 20 -28, 22 -16 L 22 -8 Q 20 -4, 14 -4 L -20 -4 Q -24 -5, -22 -14 Z" fill="#FCC32C"/>
+      <!-- canopy -->
+      <path d="M -12 -28 Q -12 -36, -4 -36 L 14 -36 Q 18 -36, 18 -30 L 18 -28 Z" fill="#14161C"/>
+      <!-- amber stripe -->
+      <rect x="-22" y="-10" width="44" height="1.2" fill="#FFAE00"/>
+      <!-- headlight -->
+      <circle cx="21" cy="-12" r="2" fill="#FFAE00"/>
+      <!-- wheels with spokes -->
+      <g transform="translate(-14 -2)">
+        <circle r="5" fill="#111317"/>
+        <g><rect x="-0.6" y="-3.5" width="1.2" height="7" fill="#FCC32C"/><animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="0.5s" repeatCount="indefinite"/></g>
+      </g>
+      <g transform="translate(14 -2)">
+        <circle r="5" fill="#111317"/>
+        <g><rect x="-0.6" y="-3.5" width="1.2" height="7" fill="#FCC32C"/><animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="0.5s" repeatCount="indefinite"/></g>
+      </g>
+      <!-- bob -->
+      <animateTransform attributeName="transform" type="translate" values="0 0; 0 -1; 0 0" dur="0.35s" repeatCount="indefinite"/>
+    </g>
+  </defs>
+
+  <!-- background -->
+  <rect width="1200" height="200" fill="transparent"/>
+
+  <!-- dashed road under the stages -->
+  <line x1="60" y1="120" x2="1140" y2="120" stroke="#FCC32C" stroke-width="2" stroke-dasharray="14 10" opacity="0.4">
+    <animate attributeName="stroke-dashoffset" from="0" to="-24" dur="0.6s" repeatCount="indefinite"/>
+  </line>
+
+  <!-- 6 stage pins evenly spaced across the rail -->
+  <g font-family="'JetBrains Mono', Menlo, monospace" font-size="10" letter-spacing="1.5" text-anchor="middle">
+
+    <!-- 01 Sign in -->
+    <g transform="translate(140 120)">
+      <line x1="0" y1="-22" x2="0" y2="-2" stroke="#9AA0AB" stroke-width="1" opacity="0.4"/>
+      <circle r="7" fill="#FCC32C"/>
+      <circle r="12" fill="none" stroke="#FCC32C" stroke-width="1" opacity="0.4"><animate attributeName="r" values="10;18;10" dur="2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.4;0;0.4" dur="2s" repeatCount="indefinite"/></circle>
+      <text y="-30" fill="#7A7F8A">01</text>
+      <text y="24" font-family="'Space Grotesk', sans-serif" font-size="13" letter-spacing="0" fill="currentColor" font-weight="600">Sign in</text>
+      <text y="40" font-family="'Space Grotesk', sans-serif" font-size="11" letter-spacing="0" fill="#9AA0AB">Phone · OTP</text>
+    </g>
+
+    <!-- 02 Search -->
+    <g transform="translate(320 120)">
+      <line x1="0" y1="-22" x2="0" y2="-2" stroke="#9AA0AB" stroke-width="1" opacity="0.4"/>
+      <circle r="7" fill="#FCC32C"/>
+      <circle r="12" fill="none" stroke="#FCC32C" stroke-width="1" opacity="0.4"><animate attributeName="r" values="10;18;10" dur="2s" begin="-0.33s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.4;0;0.4" dur="2s" begin="-0.33s" repeatCount="indefinite"/></circle>
+      <text y="-30" fill="#7A7F8A">02</text>
+      <text y="24" font-family="'Space Grotesk', sans-serif" font-size="13" letter-spacing="0" fill="currentColor" font-weight="600">Where to</text>
+      <text y="40" font-family="'Space Grotesk', sans-serif" font-size="11" letter-spacing="0" fill="#9AA0AB">Map + autocomplete</text>
+    </g>
+
+    <!-- 03 Pick -->
+    <g transform="translate(500 120)">
+      <line x1="0" y1="-22" x2="0" y2="-2" stroke="#9AA0AB" stroke-width="1" opacity="0.4"/>
+      <circle r="7" fill="#FCC32C"/>
+      <circle r="12" fill="none" stroke="#FCC32C" stroke-width="1" opacity="0.4"><animate attributeName="r" values="10;18;10" dur="2s" begin="-0.66s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.4;0;0.4" dur="2s" begin="-0.66s" repeatCount="indefinite"/></circle>
+      <text y="-30" fill="#7A7F8A">03</text>
+      <text y="24" font-family="'Space Grotesk', sans-serif" font-size="13" letter-spacing="0" fill="currentColor" font-weight="600">Pick ride</text>
+      <text y="40" font-family="'Space Grotesk', sans-serif" font-size="11" letter-spacing="0" fill="#9AA0AB">7 tiers · live fares</text>
+    </g>
+
+    <!-- 04 Confirm -->
+    <g transform="translate(680 120)">
+      <line x1="0" y1="-22" x2="0" y2="-2" stroke="#9AA0AB" stroke-width="1" opacity="0.4"/>
+      <circle r="7" fill="#FCC32C"/>
+      <circle r="12" fill="none" stroke="#FCC32C" stroke-width="1" opacity="0.4"><animate attributeName="r" values="10;18;10" dur="2s" begin="-1s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.4;0;0.4" dur="2s" begin="-1s" repeatCount="indefinite"/></circle>
+      <text y="-30" fill="#7A7F8A">04</text>
+      <text y="24" font-family="'Space Grotesk', sans-serif" font-size="13" letter-spacing="0" fill="currentColor" font-weight="600">Confirm</text>
+      <text y="40" font-family="'Space Grotesk', sans-serif" font-size="11" letter-spacing="0" fill="#9AA0AB">Driver matching</text>
+    </g>
+
+    <!-- 05 Track -->
+    <g transform="translate(860 120)">
+      <line x1="0" y1="-22" x2="0" y2="-2" stroke="#9AA0AB" stroke-width="1" opacity="0.4"/>
+      <circle r="7" fill="#FCC32C"/>
+      <circle r="12" fill="none" stroke="#FCC32C" stroke-width="1" opacity="0.4"><animate attributeName="r" values="10;18;10" dur="2s" begin="-1.33s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.4;0;0.4" dur="2s" begin="-1.33s" repeatCount="indefinite"/></circle>
+      <text y="-30" fill="#7A7F8A">05</text>
+      <text y="24" font-family="'Space Grotesk', sans-serif" font-size="13" letter-spacing="0" fill="currentColor" font-weight="600">Track</text>
+      <text y="40" font-family="'Space Grotesk', sans-serif" font-size="11" letter-spacing="0" fill="#9AA0AB">Live · OTP · ETA</text>
+    </g>
+
+    <!-- 06 Rate -->
+    <g transform="translate(1040 120)">
+      <line x1="0" y1="-22" x2="0" y2="-2" stroke="#9AA0AB" stroke-width="1" opacity="0.4"/>
+      <circle r="7" fill="#FCC32C"/>
+      <circle r="12" fill="none" stroke="#FCC32C" stroke-width="1" opacity="0.4"><animate attributeName="r" values="10;18;10" dur="2s" begin="-1.66s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.4;0;0.4" dur="2s" begin="-1.66s" repeatCount="indefinite"/></circle>
+      <text y="-30" fill="#7A7F8A">06</text>
+      <text y="24" font-family="'Space Grotesk', sans-serif" font-size="13" letter-spacing="0" fill="currentColor" font-weight="600">Rate</text>
+      <text y="40" font-family="'Space Grotesk', sans-serif" font-size="11" letter-spacing="0" fill="#9AA0AB">5★ · confetti</text>
+    </g>
+  </g>
+
+  <!-- rickshaw sliding across all six stages, pausing briefly at each -->
+  <g transform="translate(140 120)">
+    <use href="#auto-mini"/>
+    <!-- 9s cycle: visit each stage for ~1.2s, slide between -->
+    <animateTransform attributeName="transform" type="translate" dur="12s" repeatCount="indefinite"
+      keyTimes="0;    0.10; 0.17;  0.27; 0.34;  0.44; 0.51;  0.61; 0.68;  0.78; 0.85;  0.95; 1"
+      values="   140 120;  140 120;  320 120;  320 120;  500 120;  500 120;  680 120;  680 120;  860 120;  860 120;  1040 120;  1040 120;  140 120"/>
+  </g>
+
+  <!-- header label -->
+  <g font-family="'Space Grotesk', system-ui, sans-serif">
+    <text x="60" y="54" font-size="14" font-weight="600" fill="currentColor" letter-spacing="-0.2">THE RIDE FLOW</text>
+    <line x1="60" y1="64" x2="110" y2="64" stroke="#FCC32C" stroke-width="2"/>
+    <text x="60" y="84" font-size="22" font-weight="500" fill="currentColor" letter-spacing="-0.6">
+      Six stops. One fair ride.
+    </text>
+  </g>
+</svg>
