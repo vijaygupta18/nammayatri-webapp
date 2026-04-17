@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Book a ride · NammaYatri Web</title>
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/3d.css" />
+  <link rel="stylesheet" href="assets/css/premium.css" />
+  <link rel="stylesheet" href="assets/css/scenes.css" />
+  <link rel="stylesheet" href="assets/css/map.css" />
+  <style>
+    .book-layout {
+      display: grid;
+      grid-template-columns: 400px 1fr;
+      gap: 20px;
+      height: calc(100vh - 60px - 60px);
+      min-height: 560px;
+    }
+    @media (max-width: 960px) {
+      .book-layout {
+        grid-template-columns: 1fr;
+        height: auto;
+        min-height: 0;
+      }
+      .book-panel { order: 1; }
+      .book-map   { order: 2; height: 50vh; min-height: 360px; }
+    }
+    .book-panel {
+      background: var(--surface);
+      border: 1px solid var(--line-2);
+      border-radius: var(--r-lg);
+      padding: 22px;
+      overflow-y: auto;
+      display: flex; flex-direction: column; gap: 16px;
+      box-shadow: var(--shadow-2);
+    }
+    .book-map {
+      position: relative;
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      border: 1px solid var(--line-2);
+    }
+    #map { width: 100%; height: 100%; }
+    .panel-head {
+      display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;
+    }
+    .panel-head h2 { margin: 4px 0 0; font-size: 22px; letter-spacing: -0.02em; }
+    .route-info {
+      margin-top: 0;
+      padding: 14px;
+      background: var(--ink-2);
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+    }
+    .route-info .row-top {
+      display: flex; justify-content: space-between; align-items: baseline;
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-3);
+      margin-bottom: 10px;
+    }
+    .route-info .dist {
+      font-family: var(--font-mono);
+      font-size: 24px;
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .route-info .dur {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-3);
+    }
+    .route-info .line-items {
+      margin-top: 10px;
+      display: grid; grid-template-columns: 16px 1fr; gap: 6px 10px;
+      font-family: var(--font-mono); font-size: 12px; color: var(--text-2);
+    }
+    .autocomplete { position: relative; }
+    .book-panel .spacer { flex: 1; }
+  </style>
+</head>
+<body>
+<nav class="nav" data-nav></nav>
+
+<main class="page" style="padding: 20px 0 40px;">
+  <div class="container">
+    <div class="row-between" style="margin-bottom: 14px;">
+      <div>
+        <span class="eyebrow">Where to?</span>
+        <h2 style="margin-top: 6px; font-size: 22px;">Plan your ride</h2>
+      </div>
+      <span class="pill"><span class="dot"></span> Live</span>
+    </div>
+
+    <div class="book-layout">
+      <!-- Search panel (left) — always visible, never covered -->
+      <aside class="book-panel">
+        <div class="panel-head">
+          <div>
+            <div class="eyebrow">Route</div>
+            <h2>Pickup &amp; drop</h2>
+          </div>
+          <button class="btn btn-ghost btn-sm" id="gps-btn" title="Use my location" type="button">Locate me</button>
+        </div>
+
+        <div class="search-card" style="padding: 0; background: transparent; border: 0; box-shadow: none;">
+          <div class="location-inputs">
+            <div class="loc-row">
+              <span class="loc-dot src"></span>
+              <input class="loc-input" id="src-input" placeholder="Pickup location" autocomplete="off" />
+            </div>
+            <div class="loc-row">
+              <span class="loc-dot dst"></span>
+              <input class="loc-input" id="dst-input" placeholder="Drop location" autocomplete="off" />
+            </div>
+          </div>
+          <div id="autocomplete-box" class="autocomplete hidden" role="listbox"></div>
+        </div>
+
+        <!-- Button sits immediately below the location inputs -->
+        <button class="btn btn-primary btn-block btn-lg" id="search-btn" type="button">
+          <span class="btn-label">See ride options</span>
+          <span class="btn-spinner hidden" aria-hidden="true"></span>
+        </button>
+
+        <div class="route-info" id="route-sheet" hidden>
+          <div class="row-top">
+            <span>Route preview</span>
+            <span id="route-duration">—</span>
+          </div>
+          <div class="dist" id="route-distance">—</div>
+          <div class="line-items">
+            <span style="color: var(--text);">↑</span><span id="route-src">—</span>
+            <span style="color: var(--accent);">↓</span><span id="route-dst">—</span>
+          </div>
+        </div>
+
+        <div class="spacer"></div>
+
+        <p class="help-text" style="margin: 0; text-align: center;">
+          Tip — press <span class="mono" style="padding: 1px 6px; border: 1px solid var(--line-2); border-radius: 3px;">Enter</span> in any field to search.
+        </p>
+      </aside>
+
+      <!-- Map (right) -->
+      <section class="book-map">
+        <div id="map"></div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/session.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/motion.js"></script>
+<script src="assets/js/home.js"></script>
+<script>
+  // Reveal the route info block when route-distance gets populated.
+  (function () {
+    const target = document.getElementById('route-distance');
+    const sheet = document.getElementById('route-sheet');
+    if (!target || !sheet) return;
+    const obs = new MutationObserver(() => {
+      if (target.textContent && target.textContent !== '—') sheet.hidden = false;
+    });
+    obs.observe(target, { characterData: true, subtree: true, childList: true });
+  })();
+</script>
+
+<script src="https://unpkg.com/three@0.161.0/build/three.min.js"></script>
+<script src="assets/js/scenes.js"></script>
+</body>
+</html>

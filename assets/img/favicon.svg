@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect x="0" y="0" width="64" height="64" rx="14" fill="#FCC32C"/>
+  <!-- stylised auto-rickshaw silhouette in brand black -->
+  <g fill="#14161C">
+    <path d="M12 44 Q10 30 18 28 L24 16 Q27 13 33 13 L46 13 Q52 13 55 18 L58 32 Q60 36 56 38 L16 38 Q12 38 12 44 Z"/>
+    <path d="M24 18 Q28 16 33 16 L46 16 Q50 16 52 20 L52 24 L24 24 Z"/>
+    <circle cx="22" cy="46" r="6"/>
+    <circle cx="52" cy="46" r="5"/>
+  </g>
+  <circle cx="22" cy="46" r="2.2" fill="#FCC32C"/>
+  <circle cx="52" cy="46" r="1.8" fill="#FCC32C"/>
+</svg>

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Help &amp; Support · NammaYatri Web</title>
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/3d.css" />
+  <link rel="stylesheet" href="assets/css/premium.css" />
+  <link rel="stylesheet" href="assets/css/scenes.css" />
+</head>
+<body>
+<div class="scene-bg" data-scene="hero"></div>
+
+<nav class="nav" data-nav></nav>
+
+<main class="page">
+  <div class="container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+    <section class="glass">
+      <span class="eyebrow">We’re here</span>
+      <h1 style="margin-top: 12px;">Help &amp; Support</h1>
+      <p>Tell us what’s happening. Common issues resolve instantly; deeper cases route to a human.</p>
+
+      <div style="display: grid; gap: 8px; margin-top: 16px;">
+        <button class="tile" data-topic="Fare dispute">
+          <div class="tile-icon" style="font-family: var(--font-mono); font-size: 12px;">01</div>
+          <div><div class="tile-name">Fare looks wrong</div><div class="tile-meta">Ask us to review a completed ride.</div></div>
+          <div class="mute mono">→</div>
+        </button>
+        <button class="tile" data-topic="Lost item">
+          <div class="tile-icon" style="font-family: var(--font-mono); font-size: 12px;">02</div>
+          <div><div class="tile-name">Lost something in the vehicle</div><div class="tile-meta">We’ll help you reach the driver.</div></div>
+          <div class="mute mono">→</div>
+        </button>
+        <button class="tile" data-topic="Driver concern">
+          <div class="tile-icon" style="font-family: var(--font-mono); font-size: 12px;">03</div>
+          <div><div class="tile-name">Report driver behaviour</div><div class="tile-meta">Safety first — we’ll investigate.</div></div>
+          <div class="mute mono">→</div>
+        </button>
+        <button class="tile" data-topic="App feedback">
+          <div class="tile-icon" style="font-family: var(--font-mono); font-size: 12px;">04</div>
+          <div><div class="tile-name">App feedback</div><div class="tile-meta">Tell us what could be better.</div></div>
+          <div class="mute mono">→</div>
+        </button>
+      </div>
+    </section>
+
+    <section class="glass">
+      <span class="eyebrow">Describe the issue</span>
+      <h1 style="margin-top: 12px;">New ticket</h1>
+      <form id="issue-form" class="stack" style="--stack: 16px;">
+        <div class="field">
+          <label class="field-label" for="topic">Topic</label>
+          <input class="input" id="topic" placeholder="e.g. Fare dispute" />
+        </div>
+        <div class="field">
+          <label class="field-label" for="desc">Details</label>
+          <textarea class="input" id="desc" rows="6" placeholder="What happened? Include time, driver, location if relevant."></textarea>
+        </div>
+        <div class="field">
+          <label class="field-label" for="booking">Related booking ID (optional)</label>
+          <input class="input" id="booking" placeholder="bk-…" />
+        </div>
+        <div class="row" style="justify-content: flex-end; gap: 10px;">
+          <a class="btn btn-ghost" href="home.html">Cancel</a>
+          <button class="btn btn-primary" type="submit">Submit</button>
+        </div>
+      </form>
+
+      <div class="divider"></div>
+      <p class="dim" style="font-size: 12px;">
+        In an emergency, tap <a href="sos.html">SOS</a>. For general help see
+        <a href="https://nammayatri.in/support" target="_blank" rel="noreferrer">nammayatri.in/support</a>.
+      </p>
+    </section>
+  </div>
+</main>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/session.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/motion.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { qs, qsa, toast } = NY_UI;
+  NY_UI.renderNav('help');
+  if (!NY_SESSION.requireAuth()) return;
+
+  const params = new URLSearchParams(location.search);
+  const prefill = params.get('booking');
+  if (prefill) qs('#booking').value = prefill;
+
+  qsa('[data-topic]').forEach(b => b.addEventListener('click', () => {
+    qs('#topic').value = b.dataset.topic;
+    qs('#desc').focus();
+  }));
+
+  qs('#issue-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const topic = qs('#topic').value.trim(), desc = qs('#desc').value.trim();
+    if (!topic || !desc) { toast('Add a topic and details.', { type: 'error' }); return; }
+    const tickets = JSON.parse(localStorage.getItem('ny:tickets') || '[]');
+    const id = 'TKT-' + Date.now().toString(36).toUpperCase();
+    tickets.unshift({ id, topic, desc, bookingId: qs('#booking').value.trim(), createdAt: new Date().toISOString() });
+    localStorage.setItem('ny:tickets', JSON.stringify(tickets));
+    toast('Ticket ' + id + ' created', { type: 'success' });
+    setTimeout(() => location.href = 'home.html', 700);
+  });
+})();
+</script>
+
+<script src="https://unpkg.com/three@0.161.0/build/three.min.js"></script>
+<script src="assets/js/scenes.js"></script>
+</body>
+</html>

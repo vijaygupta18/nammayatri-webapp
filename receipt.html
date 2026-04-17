@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Receipt · NammaYatri Web</title>
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/3d.css" />
+  <link rel="stylesheet" href="assets/css/premium.css" />
+  <link rel="stylesheet" href="assets/css/scenes.css" />
+  <link rel="stylesheet" href="assets/css/map.css" />
+  <style>
+    .rc-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 20px; }
+    @media (max-width: 900px) { .rc-grid { grid-template-columns: 1fr; } }
+    #rc-map { height: 40vh; min-height: 320px; border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--line-2); }
+    .breakup { display: grid; grid-template-columns: 1fr auto; gap: 8px 10px; margin-top: 12px; font-size: 14px; }
+    .breakup dt { color: var(--text-2); }
+    .breakup dd { margin: 0; font-family: var(--font-mono); }
+    .breakup .total { font-family: var(--font-display); font-size: 20px; color: var(--accent); }
+  </style>
+</head>
+<body>
+<nav class="nav" data-nav></nav>
+
+<main class="page">
+  <div class="container">
+    <div class="row-between" style="margin-bottom: 18px;">
+      <div>
+        <span class="brand-logo" aria-label="NammaYatri" style="margin-bottom: 10px;"></span><br/><span class="eyebrow">Receipt</span>
+        <h2 style="margin-top: 4px;" id="rc-title">Ride summary</h2>
+      </div>
+      <button class="btn btn-ghost btn-sm" id="print-btn" type="button">Download</button>
+    </div>
+
+    <div class="rc-grid">
+      <div>
+        <div id="rc-map"></div>
+      </div>
+      <div class="glass">
+        <div class="row-between">
+          <span class="chip" id="rc-status">—</span>
+          <span class="mono" style="font-size: 11px; color: var(--text-2);" id="rc-id">—</span>
+        </div>
+        <h3 style="margin: 12px 0 2px;" id="rc-tier">—</h3>
+        <div class="mono dim" style="font-size: 12px;" id="rc-date">—</div>
+
+        <div class="divider"></div>
+
+        <div style="display: grid; grid-template-columns: auto 1fr; gap: 8px 12px;">
+          <span class="loc-dot src" style="margin-top: 5px;"></span>
+          <div><div class="mono" id="rc-src">—</div><div class="help-text">Pickup</div></div>
+          <span class="loc-dot dst" style="margin-top: 5px;"></span>
+          <div><div class="mono" id="rc-dst">—</div><div class="help-text">Drop</div></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="row-between">
+          <div>
+            <div class="help-text">Distance</div>
+            <div class="mono" id="rc-dist">—</div>
+          </div>
+          <div>
+            <div class="help-text">Duration</div>
+            <div class="mono" id="rc-dur">—</div>
+          </div>
+          <div>
+            <div class="help-text">Rating</div>
+            <div id="rc-rating">—</div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <h3>Fare breakup</h3>
+        <dl class="breakup" id="rc-breakup"></dl>
+
+        <div class="row" style="margin-top: 20px; gap: 10px; flex-wrap: wrap;">
+          <a class="btn btn-ghost btn-sm" href="rides.html">All rides</a>
+          <a class="btn btn-ghost btn-sm" href="help.html">Report an issue</a>
+          <a class="btn btn-primary btn-sm" href="home.html">Book again</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/session.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/motion.js"></script>
+<script src="assets/js/receipt.js"></script>
+
+<script src="https://unpkg.com/three@0.161.0/build/three.min.js"></script>
+<script src="assets/js/scenes.js"></script>
+</body>
+</html>

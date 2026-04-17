@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Choose your ride · NammaYatri Web</title>
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/3d.css" />
+  <link rel="stylesheet" href="assets/css/premium.css" />
+  <link rel="stylesheet" href="assets/css/scenes.css" />
+  <link rel="stylesheet" href="assets/css/map.css" />
+  <style>
+    .est-layout {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 20px;
+      align-items: start;
+    }
+    @media (max-width: 980px) {
+      .est-layout { grid-template-columns: 1fr; }
+      .est-map   { order: 2; }
+      .est-right { order: 1; }
+    }
+
+    /* LEFT — map */
+    .est-map-wrap {
+      position: sticky; top: 76px;
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      border: 1px solid var(--line-2);
+      box-shadow: var(--shadow-2);
+    }
+    #estimate-map { height: calc(100vh - 200px); min-height: 420px; }
+    @media (max-width: 980px) {
+      .est-map-wrap { position: static; }
+      #estimate-map { height: 40vh; min-height: 300px; }
+    }
+
+    /* RIGHT — trip summary + tiles + sticky confirm
+     * Let the page handle the scroll so tiles never get clipped mid-card. */
+    .est-right {
+      display: flex; flex-direction: column; gap: 16px;
+      min-width: 0;                      /* allow children to shrink so price column never clips */
+    }
+
+    .trip-head {
+      padding: 18px 20px;
+      background: var(--surface);
+      border: 1px solid var(--line-2);
+      border-radius: var(--r-lg);
+      box-shadow: var(--shadow-2);
+    }
+    .trip-locs {
+      display: grid;
+      grid-template-columns: 16px 1fr;
+      gap: 10px 12px;
+      position: relative;
+    }
+    .trip-locs::before {
+      content: '';
+      position: absolute;
+      left: 7px; top: 16px; bottom: 16px;
+      width: 2px; background: var(--line-2);
+      border-radius: 2px;
+    }
+    .trip-locs .loc-dot { position: relative; z-index: 1; margin-top: 6px; }
+    .trip-locs .trip-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+    .trip-locs .trip-value {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.35;
+      word-break: break-word;
+    }
+
+    .trip-meta {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px 16px;
+    }
+    .trip-meta .cell .label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+    .trip-meta .cell .value {
+      margin-top: 4px;
+      font-family: var(--font-mono);
+      color: var(--text);
+      font-size: 16px;
+      font-weight: 500;
+    }
+    .trip-meta .cell.accent .value { color: var(--accent); }
+
+    .est-heading {
+      display: flex; justify-content: space-between; align-items: baseline;
+      padding: 0 2px;
+    }
+    .est-heading h3 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+    .est-heading .count { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); letter-spacing: 0.1em; text-transform: uppercase; }
+
+    #estimates-list {
+      display: flex; flex-direction: column; gap: 10px;
+      min-width: 0;
+    }
+
+    /* Estimate tile tuned so the three columns never clip on the right panel */
+    .tile {
+      grid-template-columns: 68px minmax(0, 1fr) auto;
+      padding: 14px 14px;
+      gap: 14px;
+      min-width: 0;
+      transform-style: preserve-3d;
+      transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2), border-color 0.2s, box-shadow 0.3s;
+    }
+    .tile[aria-selected="true"] {
+      box-shadow: 0 0 0 1px var(--accent), 0 12px 40px rgba(252,195,44,0.22);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .tile { transition: border-color 0.2s, box-shadow 0.3s; transform: none !important; }
+    }
+    .tile-icon { width: 68px; height: 52px; }
+    .tile-icon img { max-width: 100%; max-height: 100%; object-fit: contain; }
+    .tile > div:nth-child(2) { min-width: 0; }   /* middle column — allow text-overflow */
+    .tile-name {
+      font-size: 15px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .tile-meta {
+      gap: 6px 10px;
+      font-size: 12px;
+      flex-wrap: wrap;
+      overflow: hidden;
+    }
+    .tile-meta .chip { padding: 2px 7px; font-size: 10px; }
+    .tile-meta > span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+    .tile-price {
+      text-align: right;
+      font-size: 16px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .tile-price .sub { display: block; font-size: 10px; font-family: var(--font-mono); color: var(--text-3); margin-top: 2px; letter-spacing: 0.06em; text-transform: uppercase; }
+
+    /* Sticky confirm bar — sits above the journey bar */
+    .confirm-bar {
+      position: sticky;
+      bottom: 0;
+      padding: 14px 0 10px;
+      background: linear-gradient(180deg, transparent, var(--bg) 35%);
+      z-index: 5;
+    }
+    body.has-journey .confirm-bar { bottom: 88px; }
+    @media (max-width: 720px) {
+      body.has-journey .confirm-bar { bottom: 80px; }
+    }
+    #confirm-btn { position: relative; }
+    #confirm-btn .btn-sub {
+      display: block;
+      font-family: var(--font-mono);
+      font-weight: 400;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.8;
+      margin-top: 2px;
+    }
+  </style>
+</head>
+<body>
+<nav class="nav" data-nav></nav>
+
+<main class="page">
+  <div class="container">
+    <div class="row-between" style="margin-bottom: 18px;">
+      <div>
+        <span class="eyebrow">Pick your ride</span>
+        <h2 style="margin-top: 4px;">Choose your ride</h2>
+      </div>
+      <a href="home.html" class="btn btn-ghost btn-sm">← Edit locations</a>
+    </div>
+
+    <div class="est-layout">
+      <!-- LEFT: sticky map -->
+      <section class="est-map-wrap">
+        <div id="estimate-map"></div>
+      </section>
+
+      <!-- RIGHT: trip summary + estimate list + sticky confirm -->
+      <div class="est-right">
+        <div class="trip-head">
+          <div class="trip-locs">
+            <span class="loc-dot src"></span>
+            <div>
+              <div class="trip-label">Pickup</div>
+              <div class="trip-value" id="trip-src">—</div>
+            </div>
+            <span class="loc-dot dst"></span>
+            <div>
+              <div class="trip-label">Drop</div>
+              <div class="trip-value" id="trip-dst">—</div>
+            </div>
+          </div>
+          <div class="trip-meta">
+            <div class="cell accent">
+              <div class="label">Distance</div>
+              <div class="value" id="trip-distance">—</div>
+            </div>
+            <div class="cell">
+              <div class="label">Duration</div>
+              <div class="value" id="trip-duration">—</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="est-heading">
+          <h3>Available rides</h3>
+          <span class="count" id="count-pill">Loading…</span>
+        </div>
+
+        <div id="estimates-list">
+          <div class="card skeleton" style="height: 88px;"></div>
+          <div class="card skeleton" style="height: 88px;"></div>
+          <div class="card skeleton" style="height: 88px;"></div>
+        </div>
+
+        <div class="confirm-bar">
+          <button class="btn btn-primary btn-block btn-lg" id="confirm-btn" disabled>
+            <span class="btn-label">Select a ride to continue</span>
+            <span class="btn-spinner hidden" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/session.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/motion.js"></script>
+<script src="assets/js/estimates.js"></script>
+
+<script src="https://unpkg.com/three@0.161.0/build/three.min.js"></script>
+<script src="assets/js/scenes.js"></script>
+</body>
+</html>

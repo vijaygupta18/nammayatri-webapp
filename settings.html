@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Settings · NammaYatri Web</title>
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/3d.css" />
+  <link rel="stylesheet" href="assets/css/premium.css" />
+  <link rel="stylesheet" href="assets/css/scenes.css" />
+</head>
+<body>
+<div class="scene-bg" data-scene="hero"></div>
+
+<nav class="nav" data-nav></nav>
+
+<main class="page">
+  <div class="container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+    <section class="glass">
+      <span class="eyebrow">Connectivity</span>
+      <h1 style="margin-top: 12px;">Proxy URL</h1>
+      <p>This web client talks to the NammaYatri backend only through a Cloudflare Worker. Paste the worker URL below. The real upstream is hidden inside the worker.</p>
+
+      <form id="settings-form" class="stack" style="--stack: 16px;">
+        <div class="field">
+          <label class="field-label" for="proxy">Worker URL</label>
+          <input class="input mono" id="proxy" placeholder="https://ny-web.yourname.workers.dev" />
+          <div class="help-text">See <code>cloudflare-worker.js</code> at the repo root for the deployable worker.</div>
+        </div>
+        <div class="field">
+          <label class="field-label" for="merchant">Merchant ID</label>
+          <input class="input mono" id="merchant" placeholder="NAMMA_YATRI" />
+          <div class="help-text">Usually leave as <code>NAMMA_YATRI</code>.</div>
+        </div>
+        <div class="row" style="justify-content: flex-end; gap: 10px;">
+          <button class="btn btn-ghost" type="button" id="reset-btn">Reset defaults</button>
+          <button class="btn btn-primary" type="submit">Save</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="glass">
+      <span class="eyebrow">Diagnostics</span>
+      <h1 style="margin-top: 12px;">Device &amp; session</h1>
+      <dl class="readouts">
+        <dt>session</dt><dd id="d-sid">—</dd>
+        <dt>device</dt><dd id="d-dtok">—</dd>
+        <dt>token</dt><dd id="d-token">—</dd>
+        <dt>client</dt><dd id="d-ua" style="word-break: break-all;">—</dd>
+      </dl>
+      <div class="divider"></div>
+      <div class="row" style="gap: 10px; flex-wrap: wrap;">
+        <button class="btn btn-ghost btn-sm" id="ping-btn">Ping proxy</button>
+        <button class="btn btn-danger btn-sm" id="clear-all">Clear local data</button>
+      </div>
+      <div id="diag-out" class="mono" style="margin-top: 12px; white-space: pre-wrap; font-size: 12px; color: var(--text-2);"></div>
+    </section>
+  </div>
+</main>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/session.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/motion.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { qs, toast } = NY_UI;
+  NY_UI.renderNav('settings');
+
+  qs('#d-sid').textContent = NY_SESSION.sessionId;
+  qs('#d-dtok').textContent = NY_SESSION.deviceToken;
+  qs('#d-token').textContent = NY_SESSION.token || '—';
+  qs('#d-ua').textContent = navigator.userAgent;
+
+  qs('#proxy').value = NY_CONFIG.proxy || '';
+  qs('#merchant').value = NY_CONFIG.merchantId;
+
+  qs('#settings-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    NY_CONFIG.proxy = qs('#proxy').value.trim();
+    NY_CONFIG.merchantId = qs('#merchant').value.trim() || NY_CONFIG.MERCHANT_ID;
+    toast('Settings saved', { type: 'success' });
+  });
+
+  qs('#reset-btn').addEventListener('click', () => {
+    ['proxy', 'merchant'].forEach(k => localStorage.removeItem('ny:cfg:' + k));
+    toast('Reset to defaults', { type: 'success' });
+    setTimeout(() => location.reload(), 400);
+  });
+
+  qs('#ping-btn').addEventListener('click', async () => {
+    qs('#diag-out').textContent = 'Pinging proxy…';
+    try {
+      await NY_API.autoComplete({ input: 'MG Road', lat: 12.97, lng: 77.59, isPickup: true });
+      qs('#diag-out').textContent = 'OK · proxy reachable, upstream responded';
+    } catch (e) {
+      qs('#diag-out').textContent = 'ERR ' + (e.code || '') + ' · ' + (e.message || '');
+    }
+  });
+
+  qs('#clear-all').addEventListener('click', async () => {
+    if (!await NY_UI.confirm('This removes token, profile, search state and favorites stored locally. Continue?', 'Clear local data')) return;
+    Object.keys(localStorage).filter(k => k.startsWith('ny:')).forEach(k => localStorage.removeItem(k));
+    toast('Cleared. Reloading…');
+    setTimeout(() => location.href = 'index.html', 500);
+  });
+})();
+</script>
+
+<script src="https://unpkg.com/three@0.161.0/build/three.min.js"></script>
+<script src="assets/js/scenes.js"></script>
+</body>
+</html>

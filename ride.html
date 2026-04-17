@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Your ride · NammaYatri Web</title>
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/3d.css" />
+  <link rel="stylesheet" href="assets/css/premium.css" />
+  <link rel="stylesheet" href="assets/css/scenes.css" />
+  <link rel="stylesheet" href="assets/css/map.css" />
+  <style>
+    .ride-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; }
+    @media (max-width: 960px) { .ride-grid { grid-template-columns: 1fr; } }
+
+    #track-map {
+      height: 62vh; min-height: 420px;
+      border-radius: var(--r-lg); overflow: hidden;
+      border: 1px solid var(--line-2);
+    }
+
+    .status-card {
+      padding: 22px;
+      border-radius: var(--r-lg);
+      background: var(--surface);
+      border: 1px solid var(--line);
+    }
+    .status-title { font-family: var(--font-display); font-weight: 500; font-size: 22px; margin: 0 0 2px; letter-spacing: -0.02em; }
+    .status-sub   { color: var(--text-2); font-size: 13.5px; margin: 0; }
+
+    .status-steps {
+      display: flex;
+      gap: 4px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+    .status-step {
+      flex: 1;
+      display: grid;
+      grid-template-rows: auto auto;
+      gap: 8px;
+      padding-top: 2px;
+    }
+    .status-step .bar {
+      height: 2px; background: var(--line-2);
+      position: relative; overflow: hidden;
+      transform-origin: left;
+    }
+    .status-step.active .bar { background: var(--accent); }
+    .status-step.done   .bar { background: var(--text); }
+    .status-step.just-activated .bar { animation: barFill 0.5s cubic-bezier(0.2, 0.9, 0.3, 1); }
+    @keyframes barFill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+    @media (prefers-reduced-motion: reduce) {
+      .status-step.just-activated .bar { animation: none; }
+    }
+    .status-step .label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+    .status-step.active .label { color: var(--accent); }
+    .status-step.done   .label { color: var(--text); }
+
+    .driver-card {
+      margin-top: 20px;
+      display: grid; grid-template-columns: auto 1fr auto;
+      gap: 14px;
+      padding: 16px;
+      background: var(--surface-2);
+      border: 1px solid var(--line-2);
+      border-radius: var(--r-md);
+      align-items: center;
+    }
+    .driver-avatar {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--surface-3);
+      border: 1px solid var(--line-2);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text);
+      font-family: var(--font-display); font-weight: 600; font-size: 18px;
+    }
+    .driver-name   { font-weight: 600; font-size: 15px; font-family: var(--font-display); }
+    .driver-meta   { color: var(--text-3); font-size: 12px; margin-top: 2px; }
+    .vehicle-plate {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 3px 8px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--accent);
+      border: 1px solid var(--line-2);
+      border-radius: 2px;
+      letter-spacing: 0.08em;
+    }
+
+    .otp-card {
+      margin-top: 14px;
+      padding: 18px 16px;
+      background: var(--surface-2);
+      border: 1px solid var(--line-2);
+      border-radius: var(--r-md);
+      text-align: center;
+    }
+    .otp-card .label {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+    .otp-card .digits {
+      font-family: var(--font-mono);
+      font-size: 34px;
+      font-weight: 500;
+      letter-spacing: 0.35em;
+      color: var(--text);
+      margin-top: 6px;
+    }
+
+    .ride-meta {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      margin-top: 18px;
+      border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
+    }
+    .ride-meta .cell {
+      padding: 12px 14px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .ride-meta .lbl {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+    .ride-meta .val {
+      margin-top: 4px;
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .actions { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+    .actions .btn { flex: 1; min-width: 140px; }
+
+    .car-marker {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--ink); font-weight: 700; font-size: 16px;
+      border: 2px solid var(--ink);
+      box-shadow: 0 0 0 2px var(--accent);
+    }
+  </style>
+</head>
+<body>
+<nav class="nav" data-nav></nav>
+
+<main class="page">
+  <div class="container">
+    <div class="row-between" style="margin-bottom: 18px;">
+      <div>
+        <span class="eyebrow" id="booking-id">Booking · …</span>
+        <h2 style="margin-top: 6px;">Your ride</h2>
+      </div>
+      <div class="pill"><span class="dot"></span> <span id="live-status">Searching</span></div>
+    </div>
+
+    <div class="ride-grid">
+      <div id="track-map"></div>
+
+      <aside>
+        <div class="status-card">
+          <h3 class="status-title" id="status-title">Finding a driver</h3>
+          <p class="status-sub" id="status-sub">Matching you with the nearest partner.</p>
+
+          <div class="status-steps" aria-hidden="true">
+            <div class="status-step" data-step="NEW">          <div class="bar"></div><div class="label">Request</div></div>
+            <div class="status-step" data-step="TRIP_ASSIGNED"><div class="bar"></div><div class="label">Assigned</div></div>
+            <div class="status-step" data-step="INPROGRESS">   <div class="bar"></div><div class="label">On trip</div></div>
+            <div class="status-step" data-step="COMPLETED">    <div class="bar"></div><div class="label">Complete</div></div>
+          </div>
+
+          <div class="driver-card hidden" id="driver-card">
+            <div class="driver-avatar" id="driver-avatar">D</div>
+            <div>
+              <div class="driver-name" id="driver-name">—</div>
+              <div class="driver-meta" id="driver-meta">—</div>
+              <div class="vehicle-plate" id="vehicle-number">—</div>
+            </div>
+            <div>
+              <a class="btn btn-ghost btn-sm" id="call-btn" href="#">Call</a>
+            </div>
+          </div>
+
+          <div class="otp-card hidden" id="otp-card">
+            <div class="label">Share OTP with driver</div>
+            <div class="digits" id="ride-otp">— — — —</div>
+          </div>
+
+          <div class="ride-meta">
+            <div class="cell"><div class="lbl">Distance</div><div class="val" id="meta-distance">—</div></div>
+            <div class="cell"><div class="lbl">ETA</div>     <div class="val" id="meta-eta">—</div></div>
+            <div class="cell" style="border-right: 1px solid var(--line);"><div class="lbl">Fare</div><div class="val" id="meta-fare">—</div></div>
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-ghost" id="support-btn">Help</button>
+            <button class="btn btn-danger" id="cancel-btn">Cancel ride</button>
+          </div>
+        </div>
+
+        <p class="mute" style="font-size: 11px; margin-top: 12px;">Live updates every few seconds</p>
+      </aside>
+    </div>
+  </div>
+</main>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/session.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/motion.js"></script>
+<script src="assets/js/ride.js"></script>
+
+<script src="https://unpkg.com/three@0.161.0/build/three.min.js"></script>
+<script src="assets/js/scenes.js"></script>
+</body>
+</html>

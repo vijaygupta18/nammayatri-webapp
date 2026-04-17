@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Safety · NammaYatri Web</title>
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/3d.css" />
+  <link rel="stylesheet" href="assets/css/premium.css" />
+  <link rel="stylesheet" href="assets/css/scenes.css" />
+  <style>
+    .sos-btn {
+      width: 180px; height: 180px; border-radius: 50%;
+      background: var(--critical);
+      border: 1px solid var(--critical);
+      color: #fff; font-family: var(--font-display); font-size: 30px; font-weight: 600;
+      letter-spacing: 0.1em; cursor: pointer;
+      transition: transform 0.15s var(--ease);
+      position: relative;
+    }
+    .sos-btn::before {
+      content: '';
+      position: absolute; inset: -12px;
+      border: 1px solid rgba(230,69,69,0.4);
+      border-radius: 50%;
+      animation: sosPulse 2s ease-out infinite;
+    }
+    @keyframes sosPulse {
+      0%   { transform: scale(0.9); opacity: 0.8; }
+      100% { transform: scale(1.3); opacity: 0; }
+    }
+    .sos-btn:hover  { transform: scale(1.02); }
+    .sos-btn:active { transform: scale(0.96); }
+
+    .emg-list { display: grid; gap: 8px; margin-top: 18px; }
+    .emg-item {
+      display: grid; grid-template-columns: 40px 1fr auto auto;
+      gap: 12px; align-items: center;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--r);
+      background: var(--surface);
+    }
+    .emg-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--surface-2);
+      border: 1px solid var(--line-2);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text); font-weight: 600; font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+<div class="scene-bg" data-scene="vault"></div>
+
+<nav class="nav" data-nav></nav>
+
+<main class="page">
+  <div class="container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+    <section class="glass" style="text-align: center;">
+      <span class="eyebrow">Emergency</span>
+      <h1 style="margin: 10px 0 16px; color: var(--critical);">SOS</h1>
+      <p>Press and hold to broadcast your live location to your emergency contacts.</p>
+      <div style="display: flex; justify-content: center; margin: 32px 0 20px;">
+        <button class="sos-btn" id="sos-btn" aria-label="Trigger SOS">SOS</button>
+      </div>
+      <p class="mute" style="font-size: 12px;">In a real emergency, dial 112 (India) or your local number first.</p>
+    </section>
+
+    <section class="glass">
+      <span class="eyebrow">Your safety net</span>
+      <h1 style="margin: 10px 0 16px;">Emergency contacts</h1>
+      <form id="emg-form" class="stack" style="--stack: 12px;">
+        <div class="row" style="gap: 10px;">
+          <input class="input" id="emg-name" placeholder="Full name" />
+          <input class="input" id="emg-number" placeholder="Phone number" type="tel" />
+          <button class="btn btn-primary" type="submit">Add</button>
+        </div>
+        <div class="row" style="gap: 18px; flex-wrap: wrap; font-size: 13px; color: var(--text-2);">
+          <label class="row" style="gap: 8px;"><input type="checkbox" id="emg-sms" checked/> Share trip via SMS</label>
+          <label class="row" style="gap: 8px;"><input type="checkbox" id="emg-call"/> Auto-call on SOS</label>
+        </div>
+      </form>
+      <div class="emg-list" id="emg-list"></div>
+      <p class="help-text" style="margin-top: 14px;">Contacts are saved on this device. Add at least one person you trust before your next ride.</p>
+    </section>
+  </div>
+</main>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/session.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/motion.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { qs, toast } = NY_UI;
+  NY_UI.renderNav('help');
+  if (!NY_SESSION.requireAuth()) return;
+
+  const KEY = 'ny:emgContacts';
+  const load = () => JSON.parse(localStorage.getItem(KEY) || '[]');
+  const save = (v) => localStorage.setItem(KEY, JSON.stringify(v));
+
+  function render() {
+    const list = load();
+    qs('#emg-list').innerHTML = list.length ? list.map((c, i) => `
+      <div class="emg-item">
+        <div class="emg-avatar">${(c.name || '?').slice(0,1).toUpperCase()}</div>
+        <div><div>${c.name}</div><div class="dim mono" style="font-size:12px;">${c.number}</div></div>
+        <a class="btn btn-ghost btn-sm" href="tel:${c.number.replace(/\s/g,'')}">Call</a>
+        <button class="btn btn-ghost btn-sm" data-del="${i}">✕</button>
+      </div>`).join('') : '<p class="mute center" style="margin-top: 20px; font-size: 13px;">No contacts yet.</p>';
+    qs('#emg-list').querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', () => {
+      const l = load(); l.splice(+b.dataset.del, 1); save(l); render();
+    }));
+  }
+
+  qs('#emg-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = qs('#emg-name').value.trim();
+    const number = qs('#emg-number').value.trim();
+    if (!name || !number) return toast('Enter name and number', { type: 'error' });
+    const l = load(); l.unshift({ name, number }); save(l);
+    qs('#emg-name').value = ''; qs('#emg-number').value = '';
+    render();
+  });
+
+  let pressTimer = null;
+  const btn = qs('#sos-btn');
+  const trigger = () => {
+    const list = load();
+    toast('SOS broadcasted' + (list.length ? ` to ${list.length} contact(s)` : ''), { type: 'success', duration: 4500 });
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(pos => {
+        console.info('[SOS] location', pos.coords.latitude, pos.coords.longitude);
+      });
+    }
+  };
+  btn.addEventListener('pointerdown', () => { pressTimer = setTimeout(trigger, 800); });
+  btn.addEventListener('pointerup',   () => clearTimeout(pressTimer));
+  btn.addEventListener('pointerleave',() => clearTimeout(pressTimer));
+
+  render();
+})();
+</script>
+
+<script src="https://unpkg.com/three@0.161.0/build/three.min.js"></script>
+<script src="assets/js/scenes.js"></script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign in · NammaYatri Web</title>
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/3d.css" />
+  <link rel="stylesheet" href="assets/css/premium.css" />
+  <link rel="stylesheet" href="assets/css/scenes.css" />
+</head>
+<body>
+<div class="scene-bg" data-scene="driving"></div>
+
+<nav class="nav" data-nav></nav>
+
+<main class="page scene-3d">
+  <div class="grid-floor" aria-hidden="true"></div>
+
+  <div class="container" style="display:grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; min-height: calc(100vh - 220px);">
+    <!-- Left column — warm welcome, brand, rider promise -->
+    <aside style="padding: 0 8px;">
+      <span class="brand-logo" aria-label="NammaYatri"></span>
+
+      <h1 style="margin: 22px 0 14px; font-size: clamp(2.2rem, 4vw, 3.4rem); line-height: 1.02;">
+        Welcome.<br/>
+        <span class="serif">Your ride</span> starts here.
+      </h1>
+
+      <p style="max-width: 46ch; font-size: 16px; color: var(--text-2); margin-bottom: 28px;">
+        NammaYatri is India’s first zero-commission ride-hailing network. 100 % of the fare goes to the driver — no platform cut, no surge.
+      </p>
+
+      <div style="display: grid; grid-template-columns: repeat(3, max-content); gap: 24px 28px; margin-top: 8px;">
+        <div>
+          <div class="eyebrow">Commission</div>
+          <div style="font-family: var(--font-display); font-size: 26px; color: var(--text); font-weight: 500; margin-top: 6px;">0<span class="serif">%</span></div>
+        </div>
+        <div>
+          <div class="eyebrow">Cities</div>
+          <div style="font-family: var(--font-display); font-size: 26px; color: var(--text); font-weight: 500; margin-top: 6px;">15+</div>
+        </div>
+        <div>
+          <div class="eyebrow">Rides</div>
+          <div style="font-family: var(--font-display); font-size: 26px; color: var(--text); font-weight: 500; margin-top: 6px;">150M+</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Right column — sign-in form -->
+    <div class="glass" style="max-width: 460px; margin-left: auto;">
+      <span class="eyebrow">Sign in</span>
+      <h2 style="margin: 12px 0 8px; font-size: clamp(1.6rem, 2.4vw, 2.1rem);">Enter your mobile</h2>
+      <p style="margin-bottom: 6px;">A 4-digit OTP will arrive by SMS.</p>
+
+      <form id="login-form" class="stack" style="--stack: 18px; margin-top: 22px;" novalidate>
+        <div class="field">
+          <label class="field-label" for="phone">Mobile number</label>
+          <div class="input-group">
+            <span class="input-prefix" id="cc">+91</span>
+            <input class="input with-prefix" id="phone" name="phone" type="tel" inputmode="numeric" maxlength="10" autocomplete="tel-national" placeholder="10-digit mobile" required />
+          </div>
+          <div class="error-text hidden" id="phone-err"></div>
+        </div>
+
+        <div class="row" style="justify-content: flex-end; gap: 10px;">
+          <a class="btn btn-ghost" href="index.html">Cancel</a>
+          <button class="btn btn-primary" type="submit" id="submit-btn">
+            <span class="btn-label">Send OTP</span>
+            <span class="btn-spinner hidden" aria-hidden="true"></span>
+          </button>
+        </div>
+      </form>
+
+      <div class="divider"></div>
+      <p class="mute" style="font-size: 12px; margin: 0;">By continuing you agree to the NammaYatri terms. Your phone number is only used to sign you in.</p>
+    </div>
+  </div>
+</main>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/session.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/motion.js"></script>
+<script src="assets/js/login.js"></script>
+
+<script src="https://unpkg.com/three@0.161.0/build/three.min.js"></script>
+<script src="assets/js/scenes.js"></script>
+</body>
+</html>

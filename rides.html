@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My rides · NammaYatri Web</title>
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/3d.css" />
+  <link rel="stylesheet" href="assets/css/premium.css" />
+  <link rel="stylesheet" href="assets/css/scenes.css" />
+</head>
+<body>
+<div class="scene-bg" data-scene="pulse"></div>
+
+<nav class="nav" data-nav></nav>
+
+<main class="page">
+  <div class="container">
+    <div class="row-between" style="margin-bottom: 18px;">
+      <div>
+        <span class="eyebrow">Archive</span>
+        <h2 style="margin-top: 4px;">My rides</h2>
+      </div>
+      <div class="row" style="gap: 8px;">
+        <button class="btn btn-ghost btn-sm" data-filter="all" aria-pressed="true">All</button>
+        <button class="btn btn-ghost btn-sm" data-filter="active">Active</button>
+        <button class="btn btn-ghost btn-sm" data-filter="completed">Completed</button>
+        <button class="btn btn-ghost btn-sm" data-filter="cancelled">Cancelled</button>
+      </div>
+    </div>
+
+    <div id="rides-list" class="grid" style="grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));">
+      <div class="card skeleton" style="height: 180px;"></div>
+      <div class="card skeleton" style="height: 180px;"></div>
+      <div class="card skeleton" style="height: 180px;"></div>
+    </div>
+  </div>
+</main>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/session.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/motion.js"></script>
+<script src="assets/js/rides.js"></script>
+
+<script src="https://unpkg.com/three@0.161.0/build/three.min.js"></script>
+<script src="assets/js/scenes.js"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+/* Per-page 3D scene backdrops. Theme-aware opacity. */
+
+.scene-bg {
+  position: fixed;
+  inset: 60px 0 0 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.22;                 /* very subtle on light theme so the page never looks muddy */
+  mask-image: radial-gradient(ellipse at 50% 40%, black 0%, rgba(0,0,0,0.55) 55%, transparent 95%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 40%, black 0%, rgba(0,0,0,0.55) 55%, transparent 95%);
+}
+[data-theme="dark"] .scene-bg { opacity: 0.5; }
+
+.scene-bg canvas { width: 100% !important; height: 100% !important; display: block; }
+
+.scene-inline {
+  position: absolute; inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.scene-inline canvas { width: 100% !important; height: 100% !important; display: block; }
+
+.scene-bg + main,
+.scene-bg ~ main,
+.scene-bg ~ nav { position: relative; z-index: 1; }

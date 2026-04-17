@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My profile · NammaYatri Web</title>
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/3d.css" />
+  <link rel="stylesheet" href="assets/css/premium.css" />
+  <link rel="stylesheet" href="assets/css/scenes.css" />
+  <style>
+    .p-avatar {
+      width: 64px; height: 64px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--surface-2);
+      border: 1px solid var(--line-2);
+      color: var(--text);
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 22px;
+    }
+  </style>
+</head>
+<body>
+<div class="scene-bg" data-scene="hero"></div>
+
+<nav class="nav" data-nav></nav>
+
+<main class="page">
+  <div class="container" style="display: grid; grid-template-columns: .8fr 1.2fr; gap: 24px;">
+    <aside>
+      <div class="glass">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <div class="p-avatar" id="p-avatar">…</div>
+          <div>
+            <div style="font-family: var(--font-display); font-size: 20px; font-weight: 500;" id="p-fullname">—</div>
+            <div class="dim mono" style="font-size: 12px;" id="p-mobile">—</div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <dl class="readouts">
+          <dt>rider id</dt><dd style="word-break: break-all;" id="p-id">—</dd>
+          <dt>language</dt><dd id="p-lang">—</dd>
+          <dt>referral</dt><dd id="p-ref">—</dd>
+        </dl>
+        <div class="divider"></div>
+        <div class="row" style="gap: 8px; flex-wrap: wrap;">
+          <a class="btn btn-ghost btn-sm" href="rides.html">My rides</a>
+          <a class="btn btn-ghost btn-sm" href="referral.html">Invite</a>
+          <a class="btn btn-ghost btn-sm" href="help.html">Help</a>
+          <button class="btn btn-danger btn-sm" id="logout-btn">Logout</button>
+        </div>
+      </div>
+    </aside>
+
+    <section class="glass">
+      <span class="eyebrow">Personal info</span>
+      <h1 style="margin: 12px 0 20px;">Edit profile</h1>
+
+      <form id="profile-form" class="stack" style="--stack: 18px;">
+        <div class="row" style="gap: 16px;">
+          <div class="field" style="flex: 1;">
+            <label class="field-label" for="firstName">First name</label>
+            <input class="input" id="firstName" name="firstName" />
+          </div>
+          <div class="field" style="flex: 1;">
+            <label class="field-label" for="lastName">Last name</label>
+            <input class="input" id="lastName" name="lastName" />
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label" for="email">Email</label>
+          <input class="input" id="email" name="email" type="email" />
+        </div>
+        <div class="row" style="gap: 16px;">
+          <div class="field" style="flex: 1;">
+            <label class="field-label" for="gender">Gender</label>
+            <select class="input" id="gender" name="gender">
+              <option value="">Prefer not to say</option>
+              <option value="MALE">Male</option>
+              <option value="FEMALE">Female</option>
+              <option value="OTHER">Other</option>
+              <option value="PREFER_NOT_TO_SAY">Prefer not to say</option>
+            </select>
+          </div>
+          <div class="field" style="flex: 1;">
+            <label class="field-label" for="language">Language</label>
+            <select class="input" id="language" name="language">
+              <option value="ENGLISH">English</option>
+              <option value="HINDI">हिन्दी</option>
+              <option value="KANNADA">ಕನ್ನಡ</option>
+              <option value="TAMIL">தமிழ்</option>
+              <option value="TELUGU">తెలుగు</option>
+              <option value="MALAYALAM">മലയാളം</option>
+              <option value="BENGALI">বাংলা</option>
+              <option value="ODIA">ଓଡ଼ିଆ</option>
+              <option value="FRENCH">Français</option>
+            </select>
+          </div>
+        </div>
+        <div class="row" style="justify-content: flex-end; gap: 10px;">
+          <a class="btn btn-ghost" href="home.html">Cancel</a>
+          <button class="btn btn-primary" type="submit">
+            <span class="btn-label">Save changes</span>
+            <span class="btn-spinner hidden" aria-hidden="true"></span>
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+</main>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/session.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/motion.js"></script>
+<script src="assets/js/profile.js"></script>
+
+<script src="https://unpkg.com/three@0.161.0/build/three.min.js"></script>
+<script src="assets/js/scenes.js"></script>
+</body>
+</html>

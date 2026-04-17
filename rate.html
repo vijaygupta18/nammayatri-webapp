@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rate your ride · NammaYatri Web</title>
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/3d.css" />
+  <link rel="stylesheet" href="assets/css/premium.css" />
+  <link rel="stylesheet" href="assets/css/scenes.css" />
+  <style>
+    .stars { display: flex; gap: 10px; justify-content: center; margin: 22px 0 8px; }
+    .star {
+      width: 52px; height: 52px; border-radius: var(--r);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+      background: var(--surface);
+      border: 1px solid var(--line-2);
+      color: var(--text-3);
+      cursor: pointer;
+      transition: transform 0.25s cubic-bezier(0.33, 1.7, 0.4, 1), border-color 0.2s, color 0.2s, background 0.2s;
+    }
+    .star:hover { border-color: var(--line-3); color: var(--text); }
+    .star.filled {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--surface);
+      transform: scale(1.08);
+      transition: transform 0.25s cubic-bezier(0.33, 1.7, 0.4, 1), border-color 0.2s, color 0.2s, background 0.2s;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .star, .star.filled { transition: border-color 0.2s, color 0.2s, background 0.2s; transform: none; }
+    }
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+    .tag {
+      padding: 7px 12px;
+      border-radius: 2px;
+      border: 1px solid var(--line-2);
+      background: var(--surface);
+      color: var(--text-2);
+      font-size: 12.5px;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: all .15s var(--ease);
+    }
+    .tag.active { border-color: var(--accent); color: var(--accent); }
+  </style>
+</head>
+<body>
+<div class="scene-bg" data-scene="celebrate"></div>
+
+<nav class="nav" data-nav></nav>
+
+<main class="page scene-3d">
+  <div class="grid-floor" aria-hidden="true"></div>
+
+  <div class="wrap-md glass" style="margin-top: 30px; text-align: center;">
+    <span class="eyebrow">Trip completed</span>
+    <h1 style="margin: 12px 0 4px; font-size: clamp(1.8rem, 3vw, 2.4rem);">How was your ride?</h1>
+    <p id="trip-summary" class="dim">—</p>
+
+    <div class="stars" role="radiogroup" aria-label="Rating">
+      <button class="star" data-v="1" aria-label="1 star">★</button>
+      <button class="star" data-v="2" aria-label="2 stars">★</button>
+      <button class="star" data-v="3" aria-label="3 stars">★</button>
+      <button class="star" data-v="4" aria-label="4 stars">★</button>
+      <button class="star" data-v="5" aria-label="5 stars">★</button>
+    </div>
+    <p id="rating-desc" class="dim" style="min-height: 20px;">Tap to rate</p>
+
+    <div class="divider"></div>
+    <div class="tags" id="tag-list">
+      <button class="tag" data-tag="Polite driver">Polite driver</button>
+      <button class="tag" data-tag="Clean vehicle">Clean vehicle</button>
+      <button class="tag" data-tag="Safe driving">Safe driving</button>
+      <button class="tag" data-tag="On time">On time</button>
+      <button class="tag" data-tag="Great conversation">Great conversation</button>
+      <button class="tag" data-tag="Helpful">Helpful</button>
+    </div>
+
+    <div class="field" style="margin-top: 20px; text-align: left;">
+      <label class="field-label" for="fb">Tell the driver more (optional)</label>
+      <textarea class="input" id="fb" rows="3" placeholder="Your feedback helps keep the network honest."></textarea>
+    </div>
+
+    <div class="row" style="justify-content: space-between; margin-top: 22px; gap: 10px;">
+      <a href="home.html" class="btn btn-ghost">Skip</a>
+      <button class="btn btn-primary" id="submit-btn">
+        <span class="btn-label">Submit rating</span>
+        <span class="btn-spinner hidden"></span>
+      </button>
+    </div>
+  </div>
+</main>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/session.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/motion.js"></script>
+<script src="assets/js/rate.js"></script>
+
+<script src="https://unpkg.com/three@0.161.0/build/three.min.js"></script>
+<script src="assets/js/scenes.js"></script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Track ride · NammaYatri Web</title>
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/3d.css" />
+  <link rel="stylesheet" href="assets/css/premium.css" />
+  <link rel="stylesheet" href="assets/css/scenes.css" />
+  <link rel="stylesheet" href="assets/css/map.css" />
+</head>
+<body>
+<nav class="nav" data-nav></nav>
+
+<main class="page">
+  <div class="container">
+    <div class="row-between">
+      <div>
+        <span class="eyebrow">Live tracking</span>
+        <h2 style="margin-top: 4px;">Shared ride</h2>
+      </div>
+      <span class="pill"><span class="dot"></span> <span id="sr-status">Waiting</span></span>
+    </div>
+
+    <div class="card" style="margin-top: 16px;">
+      <div id="sr-map" style="height: 60vh; min-height: 420px; border-radius: var(--r-lg); overflow: hidden;"></div>
+      <div class="row-between" style="margin-top: 14px; gap: 20px;">
+        <div style="flex: 1;">
+          <div class="dim">Rider</div><div id="sr-name" class="mono">—</div>
+        </div>
+        <div>
+          <div class="dim">Vehicle</div><div id="sr-vehicle" class="mono">—</div>
+        </div>
+        <div>
+          <div class="dim">ETA</div><div id="sr-eta" class="mono">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/session.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/motion.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { qs } = NY_UI;
+  NY_UI.renderNav();
+  const id = new URLSearchParams(location.search).get('booking') || NY_SESSION.bookingId;
+  if (!id) { qs('#sr-status').textContent = 'Missing booking id'; return; }
+
+  const map = L.map('sr-map').setView(NY_CONFIG.DEFAULT_LATLNG, 13);
+  (function(_m){ const _t=L.tileLayer(NY_UI.tileUrl(),{attribution:NY_UI.tileAttribution,maxZoom:19}).addTo(_m); window.addEventListener('ny:theme',()=>_t.setUrl(NY_UI.tileUrl())); })(map);
+  const carIcon = L.divIcon({ className: 'ny-marker', html: '<div class="car-marker" style="width:32px;height:32px;border-radius:50%;background:var(--accent);color:var(--ink);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:11px;font-weight:700;">CAR</div>', iconSize: [32, 32], iconAnchor: [16, 16] });
+  let carMarker = null, pts = [], idx = 0;
+
+  async function tick() {
+    try {
+      const b = await NY_API.booking(id);
+      qs('#sr-status').textContent = b.status;
+      qs('#sr-name').textContent = b.driverName || 'Matching…';
+      qs('#sr-vehicle').textContent = b.vehicleNumber || '—';
+      qs('#sr-eta').textContent = b.estimatedDuration ? Math.round(b.estimatedDuration/60) + ' min' : '—';
+      if (b.fromLocation?.lat && b.bookingDetails?.contents?.toLocation?.lat) {
+        if (!carMarker) {
+          carMarker = L.marker([b.fromLocation.lat, b.fromLocation.lon], { icon: carIcon }).addTo(map);
+          map.fitBounds([[b.fromLocation.lat, b.fromLocation.lon], [b.bookingDetails.contents.toLocation.lat, b.bookingDetails.contents.toLocation.lon]], { padding: [40, 40] });
+        }
+      }
+      if (b.status === 'COMPLETED' || b.status === 'CANCELLED') return;
+    } catch {}
+    setTimeout(tick, 3000);
+  }
+  tick();
+})();
+</script>
+
+<script src="https://unpkg.com/three@0.161.0/build/three.min.js"></script>
+<script src="assets/js/scenes.js"></script>
+</body>
+</html>

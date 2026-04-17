@@ -1,0 +1,147 @@
+/* Map styles — theme-aware (light & dark). Tile URL is switched from JS. */
+
+#map,
+#estimate-map,
+#track-map,
+#rc-map,
+#sr-map {
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--surface-2);
+}
+
+.leaflet-container {
+  background: var(--surface-2) !important;
+  font-family: var(--font-body) !important;
+}
+.leaflet-tile { filter: saturate(1.05); }
+
+.leaflet-control-attribution {
+  background: color-mix(in srgb, var(--surface) 80%, transparent) !important;
+  color: var(--text-3) !important;
+  font-size: 10px !important;
+  padding: 2px 6px !important;
+  border-radius: 0 !important;
+  border: 1px solid var(--line) !important;
+}
+.leaflet-control-attribution a { color: var(--text-2) !important; }
+
+.leaflet-control-zoom a {
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--line-2) !important;
+  border-radius: 3px !important;
+}
+.leaflet-control-zoom a:hover {
+  background: var(--surface-2) !important;
+  color: var(--accent) !important;
+}
+
+.map-wrap {
+  position: relative;
+  height: calc(100vh - 200px);
+  min-height: 520px;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  border: 1px solid var(--line-2);
+}
+
+.map-overlay {
+  position: absolute;
+  top: 16px; left: 16px; right: 16px;
+  z-index: 5;
+  pointer-events: none;
+}
+.map-overlay > * { pointer-events: auto; }
+
+.search-card {
+  background: var(--surface);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-md);
+  padding: 16px;
+  box-shadow: var(--shadow-2);
+}
+
+.location-inputs {
+  display: flex; flex-direction: column; gap: 6px;
+  position: relative;
+}
+.location-inputs::before {
+  content: '';
+  position: absolute;
+  left: 17px; top: 24px; bottom: 24px;
+  width: 1px;
+  background: var(--line-3);
+}
+.loc-row {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 10px 14px 10px 12px;
+  position: relative; z-index: 1;
+  transition: border-color 0.18s var(--ease);
+}
+.loc-row:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent); }
+.loc-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  flex-shrink: 0;
+  border: 2px solid var(--paper);
+  box-shadow: 0 0 0 1px var(--text);
+}
+.loc-dot.src { background: var(--text); }
+.loc-dot.dst { background: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+
+.loc-input {
+  background: transparent; border: none; outline: none;
+  color: var(--text); font-family: var(--font-body); font-size: 14.5px;
+  width: 100%;
+  padding: 0;
+}
+.loc-input::placeholder { color: var(--text-3); }
+
+/* autocomplete dropdown */
+.autocomplete {
+  margin-top: 8px;
+  background: var(--surface);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-md);
+  max-height: 320px; overflow-y: auto;
+  box-shadow: var(--shadow-2);
+  animation: dropIn 0.18s var(--ease);
+  position: relative;
+}
+.autocomplete-item {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  display: flex; gap: 10px; align-items: flex-start;
+  transition: background 0.12s;
+}
+.autocomplete-item:last-child { border-bottom: none; }
+.autocomplete-item:hover { background: var(--surface-2); }
+.autocomplete-item .icon {
+  color: var(--text-3);
+  font-family: var(--font-mono); font-size: 12px;
+  flex-shrink: 0; width: 14px;
+}
+.autocomplete-item .desc { font-size: 13.5px; color: var(--text); flex: 1; line-height: 1.4; }
+.autocomplete-item .dist { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); flex-shrink: 0; }
+@keyframes dropIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* marker customisation */
+.leaflet-marker-icon.ny-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* mini map */
+.mini-map {
+  height: 320px;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  border: 1px solid var(--line-2);
+}
